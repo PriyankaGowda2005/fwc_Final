@@ -45,8 +45,14 @@ router.post('/convert', verifyToken, async (req, res) => {
       });
     }
 
+    // Normalize IDs to ObjectId when possible
+    const { ObjectId } = require('mongodb');
+    const normalizedCandidateId = ObjectId.isValid(candidateId) ? new ObjectId(candidateId) : candidateId;
+    const normalizedJobPostingId = ObjectId.isValid(jobPostingId) ? new ObjectId(jobPostingId) : jobPostingId;
+    const normalizedInterviewId = ObjectId.isValid(interviewId) ? new ObjectId(interviewId) : interviewId;
+    
     // Get candidate details
-    const candidate = await database.findOne('candidates', { _id: candidateId });
+    const candidate = await database.findOne('candidates', { _id: normalizedCandidateId });
     if (!candidate) {
       return res.status(404).json({
         success: false,
@@ -55,7 +61,7 @@ router.post('/convert', verifyToken, async (req, res) => {
     }
 
     // Get job posting details
-    const jobPosting = await database.findOne('job_postings', { _id: jobPostingId });
+    const jobPosting = await database.findOne('job_postings', { _id: normalizedJobPostingId });
     if (!jobPosting) {
       return res.status(404).json({
         success: false,
@@ -64,7 +70,7 @@ router.post('/convert', verifyToken, async (req, res) => {
     }
 
     // Get interview details
-    const interview = await database.findOne('interviews', { _id: interviewId });
+    const interview = await database.findOne('interviews', { _id: normalizedInterviewId });
     if (!interview) {
       return res.status(404).json({
         success: false,
@@ -74,7 +80,7 @@ router.post('/convert', verifyToken, async (req, res) => {
 
     // Check if candidate is already converted
     const existingEmployee = await database.findOne('employees', { 
-      candidateId: candidateId 
+      candidateId: normalizedCandidateId 
     });
     if (existingEmployee) {
       return res.status(400).json({
@@ -86,10 +92,42 @@ router.post('/convert', verifyToken, async (req, res) => {
     // Generate employee ID
     const employeeId = `EMP${Date.now().toString().slice(-6)}`;
 
-    // Create employee record
+    // Check if user account already exists (shouldn't happen, but safety check)
+    let existingUser = await database.findOne('users', { email: candidate.email });
+    let userResult;
+    
+    if (existingUser) {
+      // User already exists, use existing user ID
+      console.warn(`User account already exists for ${candidate.email}, using existing account`);
+      userResult = { insertedId: existingUser._id };
+    } else {
+      // Create user account first (without employeeId, we'll update it after)
+      const hashedPassword = await bcrypt.hash('Welcome123!', 10); // Default password
+      const userAccount = {
+        username: candidate.email,
+        email: candidate.email,
+        password: hashedPassword,
+        role: 'EMPLOYEE',
+        candidateId: normalizedCandidateId,
+        isActive: true,
+        profileComplete: true,
+        lastLogin: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      userResult = await database.insertOne('users', userAccount);
+      
+      if (!userResult || !userResult.insertedId) {
+        throw new Error('Failed to create user account');
+      }
+    }
+
+    // Create employee record with userId set (required for unique index)
     const employee = {
       employeeId,
-      candidateId,
+      userId: userResult.insertedId, // Set userId to avoid duplicate key error
+      candidateId: normalizedCandidateId,
       firstName: candidate.firstName,
       lastName: candidate.lastName,
       email: candidate.email,
@@ -101,7 +139,7 @@ router.post('/convert', verifyToken, async (req, res) => {
       jobTitle: jobPosting.title,
       managerId: managerId || null,
       startDate: new Date(startDate),
-      salary: salary || jobPosting.salaryRange?.min || 0,
+      salary: salary || (typeof jobPosting.salaryRange === 'object' ? jobPosting.salaryRange?.min : 0) || 0,
       status: 'ACTIVE',
       employmentType: 'FULL_TIME',
       workLocation: jobPosting.location || 'Office',
@@ -122,29 +160,24 @@ router.post('/convert', verifyToken, async (req, res) => {
     };
 
     const employeeResult = await database.insertOne('employees', employee);
-
-    // Create user account for the new employee
-    const hashedPassword = await bcrypt.hash('Welcome123!', 10); // Default password
-    const userAccount = {
-      username: candidate.email,
-      email: candidate.email,
-      password: hashedPassword,
-      role: 'EMPLOYEE',
-      employeeId: employeeResult.insertedId,
-      candidateId: candidateId,
-      isActive: true,
-      profileComplete: true,
-      lastLogin: null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    const userResult = await database.insertOne('users', userAccount);
+    
+    if (!employeeResult || !employeeResult.insertedId) {
+      throw new Error('Failed to create employee record');
+    }
+    
+    // Update user account with employeeId (if user was just created)
+    if (!existingUser) {
+      await database.updateOne(
+        'users',
+        { _id: userResult.insertedId },
+        { $set: { employeeId: employeeResult.insertedId } }
+      );
+    }
 
     // Update candidate status
     await database.updateOne(
       'candidates',
-      { _id: candidateId },
+      { _id: normalizedCandidateId },
       { 
         $set: { 
           status: 'HIRED',
@@ -159,7 +192,7 @@ router.post('/convert', verifyToken, async (req, res) => {
     // Update interview status
     await database.updateOne(
       'interviews',
-      { _id: interviewId },
+      { _id: normalizedInterviewId },
       { 
         $set: { 
           status: 'HIRED',
@@ -172,7 +205,7 @@ router.post('/convert', verifyToken, async (req, res) => {
     // Update job posting if needed
     await database.updateOne(
       'job_postings',
-      { _id: jobPostingId },
+      { _id: normalizedJobPostingId },
       { 
         $inc: { 
           hiredCount: 1,
@@ -187,9 +220,9 @@ router.post('/convert', verifyToken, async (req, res) => {
     // Create onboarding record
     const onboarding = {
       employeeId: employeeResult.insertedId,
-      candidateId: candidateId,
-      jobPostingId: jobPostingId,
-      interviewId: interviewId,
+      candidateId: normalizedCandidateId,
+      jobPostingId: normalizedJobPostingId,
+      interviewId: normalizedInterviewId,
       status: 'PENDING',
       startDate: new Date(startDate),
       tasks: [
@@ -204,62 +237,105 @@ router.post('/convert', verifyToken, async (req, res) => {
       updatedAt: new Date()
     };
 
-    await database.insertOne('onboarding', onboarding);
-
-    // Send welcome email to new employee
-    if (emailQueue) {
-      await emailQueue.add('send-email', {
-        type: 'employee_welcome',
-        to: candidate.email,
-        data: {
-          employeeName: `${candidate.firstName} ${candidate.lastName}`,
-          jobTitle: jobPosting.title,
-          department: department || jobPosting.department,
-          startDate: new Date(startDate).toLocaleDateString(),
-          managerName: managerId ? 'Your Manager' : 'TBD', // Could fetch manager name
-          salary: salary || 'TBD',
-          employeeId: employeeId,
-          loginUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`,
-          onboardingUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/employee/onboarding`
-        }
-      });
+    let onboardingResult;
+    try {
+      onboardingResult = await database.insertOne('onboarding', onboarding);
+      
+      if (!onboardingResult || !onboardingResult.insertedId) {
+        console.error('Failed to create onboarding record, but continuing...');
+        onboardingResult = { insertedId: null };
+      }
+    } catch (onboardingError) {
+      console.error('Error creating onboarding record:', onboardingError);
+      // Don't fail the entire conversion if onboarding fails
+      onboardingResult = { insertedId: null };
     }
 
-    // Send notification to HR team
+    // Send welcome email to new employee (non-blocking)
     if (emailQueue) {
-      await emailQueue.add('send-email', {
-        type: 'candidate_hired',
-        to: user.email, // HR user email
-        data: {
-          candidateName: `${candidate.firstName} ${candidate.lastName}`,
-          jobTitle: jobPosting.title,
-          department: department || jobPosting.department,
-          startDate: new Date(startDate).toLocaleDateString(),
-          employeeId: employeeId,
-          interviewScore: interview.finalScore || interview.aiScores?.overallScore || 0,
-          convertedBy: user.name || user.email
-        }
-      });
+      try {
+        await emailQueue.add('send-email', {
+          type: 'employee_welcome',
+          to: candidate.email,
+          data: {
+            employeeName: `${candidate.firstName} ${candidate.lastName}`,
+            jobTitle: jobPosting.title,
+            department: department || jobPosting.department,
+            startDate: new Date(startDate).toLocaleDateString(),
+            managerName: managerId ? 'Your Manager' : 'TBD', // Could fetch manager name
+            salary: salary || 'TBD',
+            employeeId: employeeId,
+            loginUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`,
+            onboardingUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/employee/onboarding`
+          }
+        });
+      } catch (emailError) {
+        console.warn('Failed to queue welcome email:', emailError.message);
+        // Don't fail conversion if email fails
+      }
+    }
+
+    // Send notification to HR team (non-blocking)
+    if (emailQueue) {
+      try {
+        await emailQueue.add('send-email', {
+          type: 'candidate_hired',
+          to: user.email, // HR user email
+          data: {
+            candidateName: `${candidate.firstName} ${candidate.lastName}`,
+            jobTitle: jobPosting.title,
+            department: department || jobPosting.department,
+            startDate: new Date(startDate).toLocaleDateString(),
+            employeeId: employeeId,
+            interviewScore: interview.finalScore || interview.aiScores?.overallScore || 0,
+            convertedBy: user.name || user.email
+          }
+        });
+      } catch (emailError) {
+        console.warn('Failed to queue HR notification email:', emailError.message);
+        // Don't fail conversion if email fails
+      }
     }
 
     res.json({
       success: true,
       message: 'Candidate successfully converted to employee',
       data: {
-        employeeId: employeeResult.insertedId,
-        userId: userResult.insertedId,
         employeeId: employeeId,
-        onboardingId: onboarding._id
+        employeeRecordId: employeeResult.insertedId,
+        userId: userResult.insertedId,
+        onboardingId: onboardingResult.insertedId,
+        candidateId: normalizedCandidateId,
+        jobPostingId: normalizedJobPostingId,
+        interviewId: normalizedInterviewId
       }
     });
 
   } catch (error) {
     console.error('Convert candidate error:', error);
-    res.status(500).json({
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      code: error.code
+    });
+    
+    const errorMessage = error.message || 'An error occurred during candidate conversion';
+    const errorResponse = {
       success: false,
       message: 'Internal server error',
-      error: error.message
-    });
+      error: process.env.NODE_ENV === 'development' ? errorMessage : 'An error occurred during candidate conversion'
+    };
+    
+    if (process.env.NODE_ENV === 'development') {
+      errorResponse.stack = error.stack;
+      errorResponse.details = {
+        name: error.name,
+        code: error.code
+      };
+    }
+    
+    res.status(500).json(errorResponse);
   }
 });
 
@@ -418,10 +494,14 @@ router.get('/onboarding/:employeeId', verifyToken, async (req, res) => {
   try {
     const { employeeId } = req.params;
     const userId = req.user._id;
+    
+    // Normalize employeeId to ObjectId when possible
+    const { ObjectId } = require('mongodb');
+    const normalizedEmployeeId = ObjectId.isValid(employeeId) ? new ObjectId(employeeId) : employeeId;
 
     // Verify user has permission or is the employee
     const user = await database.findOne('users', { _id: userId });
-    const employee = await database.findOne('employees', { _id: employeeId });
+    const employee = await database.findOne('employees', { _id: normalizedEmployeeId });
 
     if (!['HR', 'ADMIN'].includes(user.role) && employee?.userId !== userId) {
       return res.status(403).json({
@@ -430,7 +510,7 @@ router.get('/onboarding/:employeeId', verifyToken, async (req, res) => {
       });
     }
 
-    const onboarding = await database.findOne('onboarding', { employeeId });
+    const onboarding = await database.findOne('onboarding', { employeeId: normalizedEmployeeId });
 
     if (!onboarding) {
       return res.status(404).json({
@@ -470,7 +550,7 @@ router.put('/onboarding/:employeeId/task/:taskId', verifyToken, async (req, res)
       });
     }
 
-    const onboarding = await database.findOne('onboarding', { employeeId });
+    const onboarding = await database.findOne('onboarding', { employeeId: normalizedEmployeeId });
     if (!onboarding) {
       return res.status(404).json({
         success: false,

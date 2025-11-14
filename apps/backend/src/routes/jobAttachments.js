@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const database = require('../database/connection');
 const { verifyToken } = require('../middleware/authMiddleware');
+const { ObjectId } = require('mongodb');
 
 // Attach screened candidate to job posting
 router.post('/attach', verifyToken, async (req, res) => {
@@ -32,9 +33,13 @@ router.post('/attach', verifyToken, async (req, res) => {
       });
     }
 
+    // Normalize IDs to ObjectId when possible
+    const normalizedCandidateId = ObjectId.isValid(candidateId) ? new ObjectId(candidateId) : candidateId;
+    const normalizedJobPostingId = ObjectId.isValid(jobPostingId) ? new ObjectId(jobPostingId) : jobPostingId;
+    
     // Get candidate and job posting details
-    const candidate = await database.findOne('candidates', { _id: candidateId });
-    const jobPosting = await database.findOne('job_postings', { _id: jobPostingId });
+    const candidate = await database.findOne('candidates', { _id: normalizedCandidateId });
+    const jobPosting = await database.findOne('job_postings', { _id: normalizedJobPostingId });
 
     if (!candidate) {
       return res.status(404).json({
@@ -52,8 +57,8 @@ router.post('/attach', verifyToken, async (req, res) => {
 
     // Check if candidate has been screened for this job
     const screening = await database.findOne('resume_screenings', {
-      candidateId,
-      jobPostingId,
+      candidateId: normalizedCandidateId,
+      jobPostingId: normalizedJobPostingId,
       status: { $in: ['SCREENED', 'APPROVED'] }
     });
 
@@ -66,8 +71,8 @@ router.post('/attach', verifyToken, async (req, res) => {
 
     // Check if already attached
     const existingAttachment = await database.findOne('job_attachments', {
-      candidateId,
-      jobPostingId
+      candidateId: normalizedCandidateId,
+      jobPostingId: normalizedJobPostingId
     });
 
     if (existingAttachment) {
@@ -79,8 +84,8 @@ router.post('/attach', verifyToken, async (req, res) => {
 
     // Create attachment record
     const attachment = {
-      candidateId,
-      jobPostingId,
+      candidateId: normalizedCandidateId,
+      jobPostingId: normalizedJobPostingId,
       screeningId: screening._id,
       attachedBy: req.user._id,
       attachedByName: req.user.name,
@@ -97,7 +102,7 @@ router.post('/attach', verifyToken, async (req, res) => {
     // Update candidate application status
     await database.updateOne(
       'candidate_applications',
-      { candidateId, jobPostingId },
+      { candidateId: normalizedCandidateId, jobPostingId: normalizedJobPostingId },
       { 
         $set: { 
           status: 'SHORTLISTED',
@@ -110,7 +115,7 @@ router.post('/attach', verifyToken, async (req, res) => {
     // Update job posting with attachment count
     await database.updateOne(
       'job_postings',
-      { _id: jobPostingId },
+      { _id: normalizedJobPostingId },
       { 
         $inc: { 
           shortlistedCount: 1,
@@ -123,9 +128,14 @@ router.post('/attach', verifyToken, async (req, res) => {
       success: true,
       message: 'Candidate attached to job posting successfully',
       data: {
+        _id: attachmentResult.insertedId,
         attachmentId: attachmentResult.insertedId,
+        candidateId: normalizedCandidateId,
+        jobPostingId: normalizedJobPostingId,
         candidate: {
-          name: candidate.name,
+          name: candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim(),
+          firstName: candidate.firstName,
+          lastName: candidate.lastName,
           email: candidate.email
         },
         jobPosting: {
@@ -133,7 +143,8 @@ router.post('/attach', verifyToken, async (req, res) => {
           department: jobPosting.department
         },
         priority,
-        fitScore: screening.fitScore
+        fitScore: screening.fitScore,
+        status: 'ATTACHED'
       }
     });
 

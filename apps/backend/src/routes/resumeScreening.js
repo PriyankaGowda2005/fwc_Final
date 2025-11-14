@@ -222,9 +222,16 @@ router.post('/screen', verifyToken, async (req, res) => {
       success: true,
       message: 'Resume screening completed successfully',
       data: {
+        _id: screeningResult.insertedId,
         screeningId: screeningResult.insertedId,
+        candidateId: normalizedCandidateId,
+        jobPostingId: normalizedJobPostingId,
+        fitScore: fitScore,
+        status: 'SCREENED',
         candidate: {
-          name: candidate.name,
+          name: candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim(),
+          firstName: candidate.firstName,
+          lastName: candidate.lastName,
           email: candidate.email
         },
         jobPosting: {
@@ -232,7 +239,10 @@ router.post('/screen', verifyToken, async (req, res) => {
           department: jobPosting.department
         },
         aiAnalysis: aiAnalysis?.data || null,
-        screeningNotes: screeningNotes || ''
+        screeningNotes: screeningNotes || '',
+        strengths: screening.strengths || [],
+        weaknesses: screening.weaknesses || [],
+        candidateSummary: candidateSummary
       }
     });
 
@@ -523,7 +533,10 @@ router.put('/screening/:screeningId/status', verifyToken, async (req, res) => {
       });
     }
 
-    const screening = await database.findOne('resume_screenings', { _id: screeningId });
+    // Normalize screeningId to ObjectId when possible
+    const normalizedScreeningId = ObjectId.isValid(screeningId) ? new ObjectId(screeningId) : screeningId;
+    
+    const screening = await database.findOne('resume_screenings', { _id: normalizedScreeningId });
     
     if (!screening) {
       return res.status(404).json({
@@ -535,7 +548,7 @@ router.put('/screening/:screeningId/status', verifyToken, async (req, res) => {
     // Update screening status
     await database.updateOne(
       'resume_screenings',
-      { _id: screeningId },
+      { _id: normalizedScreeningId },
       { 
         $set: { 
           status,

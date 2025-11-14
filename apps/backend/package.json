@@ -16,7 +16,8 @@
     "db:test-passwords": "node src/scripts/testPasswordVerification.js",
     "db:ensure-employees": "node src/scripts/ensureEmployeeRecords.js",
     "db:seed-comprehensive": "node src/seeds/comprehensiveSeedData.js",
-    "db:seed-recruitment": "node src/seeds/recruitmentSeedData.js"
+    "db:seed-recruitment": "node src/seeds/recruitmentSeedData.js",
+    "test:candidate-flow": "node src/scripts/testCandidateFlow.js"
   },
   "dependencies": {
     "@emailjs/nodejs": "^5.0.2",
@@ -31,6 +32,7 @@
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
+    "form-data": "^4.0.4",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0",

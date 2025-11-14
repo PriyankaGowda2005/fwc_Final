@@ -723,7 +723,10 @@ router.put('/:interviewId/status', verifyToken, async (req, res) => {
       });
     }
 
-    const interview = await database.findOne('interviews', { _id: interviewId });
+    // Normalize interviewId to ObjectId when possible
+    const normalizedInterviewId = ObjectId.isValid(interviewId) ? new ObjectId(interviewId) : interviewId;
+    
+    const interview = await database.findOne('interviews', { _id: normalizedInterviewId });
     
     if (!interview) {
       return res.status(404).json({
@@ -749,10 +752,22 @@ router.put('/:interviewId/status', verifyToken, async (req, res) => {
 
     if (notes) updateData.interviewNotes = notes;
     if (feedback) updateData.feedback = feedback;
+    
+    // Allow setting scores when completing interview
+    if (req.body.finalScore !== undefined) {
+      updateData.finalScore = req.body.finalScore;
+    }
+    if (req.body.aiScores) {
+      updateData.aiScores = req.body.aiScores;
+    }
+    if (status === 'COMPLETED' && req.body.finalScore === undefined && req.body.aiScores === undefined) {
+      // If completing without scores, set a default or leave it for later
+      updateData.completedAt = new Date();
+    }
 
     await database.updateOne(
       'interviews',
-      { _id: interviewId },
+      { _id: normalizedInterviewId },
       { $set: updateData }
     );
 
