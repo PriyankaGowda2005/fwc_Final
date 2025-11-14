@@ -10,6 +10,7 @@ import ResumeScreeningModal from '../components/ResumeScreeningModal'
 import ResumeScreeningResultsModal from '../components/ResumeScreeningResultsModal'
 import JobAttachmentModal from '../components/JobAttachmentModal'
 import JobAttachmentsTab from '../components/JobAttachmentsTab'
+import AllAttachmentsTab from '../components/AllAttachmentsTab'
 import InterviewSchedulingModal from '../components/InterviewSchedulingModal'
 import InterviewManagement from '../components/InterviewManagement'
 import RecentCandidatesSection from '../components/RecentCandidatesSection'
@@ -161,11 +162,19 @@ const RecruitmentDashboard = () => {
   // Schedule AI interview (no attachment)
   const scheduleAIMutation = useMutation({
     mutationFn: (payload) => interviewsAPI.scheduleAIInterview(payload),
-    onSuccess: () => {
-      toast.success('AI interview scheduled')
+    onSuccess: (response) => {
+      const emailSent = response?.data?.emailSent
+      toast.success(
+        emailSent 
+          ? 'AI interview scheduled and invitation email sent to candidate!' 
+          : 'AI interview scheduled successfully!'
+      )
       setShowAIInterview(false)
+      setSelectedCandidate(null)
+      setSelectedJob(null)
       queryClient.invalidateQueries('candidates')
       queryClient.invalidateQueries(['manager-interviews', user.userId])
+      queryClient.invalidateQueries('interviews')
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Failed to schedule AI interview')
@@ -460,7 +469,7 @@ const RecruitmentDashboard = () => {
               </motion.div>
             )}
 
-            {activeTab === 'job-attachments' && selectedJob && (
+            {activeTab === 'job-attachments' && (
               <motion.div
                 key="job-attachments"
                 initial={{ opacity: 0, y: 20 }}
@@ -469,8 +478,8 @@ const RecruitmentDashboard = () => {
                 transition={{ duration: 0.2 }}
                 className="p-6"
               >
-                <JobAttachmentsTab 
-                  jobPosting={selectedJob} 
+                <AllAttachmentsTab 
+                  jobPostings={jobPostings}
                   onScheduleInterview={handleScheduleInterview}
                 />
               </motion.div>
@@ -593,20 +602,38 @@ const RecruitmentDashboard = () => {
         />
       )}
 
-      {/* Simple AI Interview Scheduling Modal */}
+      {/* Enhanced AI Interview Scheduling Modal */}
       {showAIInterview && selectedCandidate && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Schedule AI Interview</h3>
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Schedule AI Interview</h3>
+              <button
+                onClick={() => {
+                  setShowAIInterview(false)
+                  setSelectedCandidate(null)
+                  setSelectedJob(null)
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XCircleIcon className="w-5 h-5" />
+              </button>
+            </div>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">Candidate</label>
-                <div className="text-sm text-gray-900">
+              {/* Candidate Info */}
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <label className="block text-xs font-medium text-gray-600 mb-1">Candidate</label>
+                <div className="text-sm font-medium text-gray-900">
                   {selectedCandidate.firstName || selectedCandidate.name} {selectedCandidate.lastName || ''}
                 </div>
+                <div className="text-xs text-gray-600 mt-1">{selectedCandidate.email}</div>
               </div>
+
+              {/* Job Posting Selection */}
               <div>
-                <label className="block text-sm text-gray-700 mb-1">Job Posting</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Job Posting <span className="text-red-500">*</span>
+                </label>
                 <select
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={selectedJob?._id || ''}
@@ -614,54 +641,144 @@ const RecruitmentDashboard = () => {
                     const jp = (jobPostings || []).find(j => j._id === e.target.value)
                     setSelectedJob(jp || null)
                   }}
+                  required
                 >
-                  <option value="">Select job...</option>
+                  <option value="">Select job posting...</option>
                   {jobPostings.map(j => (
                     <option key={j._id} value={j._id}>{j.title} - {j.department}</option>
                   ))}
                 </select>
               </div>
+
+              {/* Date & Time */}
               <div>
-                <label className="block text-sm text-gray-700 mb-1">Date & Time</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Interview Date & Time <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="datetime-local"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   id="aiInterviewDatetime"
+                  min={new Date().toISOString().slice(0, 16)}
+                  required
                 />
               </div>
+
+              {/* Duration */}
               <div>
-                <label className="block text-sm text-gray-700 mb-1">Meeting Link (optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Duration (minutes)</label>
+                <select
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  id="aiInterviewDuration"
+                  defaultValue="45"
+                >
+                  <option value="30">30 minutes</option>
+                  <option value="45">45 minutes</option>
+                  <option value="60">60 minutes</option>
+                  <option value="90">90 minutes</option>
+                </select>
+              </div>
+
+              {/* Meeting Link */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Meeting Link (optional)</label>
                 <input
                   type="url"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   id="aiInterviewLink"
-                  placeholder="https://..."
+                  placeholder="https://meet.company.com/ai-interview/..."
                 />
+                <p className="text-xs text-gray-500 mt-1">Leave empty to auto-generate</p>
+              </div>
+
+              {/* Interview Notes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Interview Notes (optional)</label>
+                <textarea
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  id="aiInterviewNotes"
+                  rows={3}
+                  placeholder="Add any specific instructions or notes for the candidate..."
+                />
+              </div>
+
+              {/* Auto-invite checkbox */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="autoInvite"
+                  defaultChecked={true}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="autoInvite" className="text-sm text-gray-700">
+                  Automatically send invitation email to candidate
+                </label>
+              </div>
+
+              {/* Info notice */}
+              <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                <div className="flex items-start">
+                  <LightBulbIcon className="w-4 h-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                  <div className="text-xs text-blue-800">
+                    <p className="font-medium mb-1">What happens next:</p>
+                    <ul className="list-disc list-inside space-y-0.5">
+                      <li>AI will generate interview questions based on the job requirements</li>
+                      <li>Candidate will receive an email with interview details and meeting link</li>
+                      <li>Interview will appear in candidate's dashboard</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="mt-6 flex justify-end space-x-3">
               <button
-                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700"
-                onClick={() => setShowAIInterview(false)}
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  setShowAIInterview(false)
+                  setSelectedCandidate(null)
+                  setSelectedJob(null)
+                }}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                 disabled={!selectedJob?._id || scheduleAIMutation.isLoading}
                 onClick={() => {
                   const when = (document.getElementById('aiInterviewDatetime') || {}).value
                   const link = (document.getElementById('aiInterviewLink') || {}).value
+                  const duration = (document.getElementById('aiInterviewDuration') || {}).value || 45
+                  const notes = (document.getElementById('aiInterviewNotes') || {}).value || ''
+                  const autoInvite = (document.getElementById('autoInvite') || {}).checked
+
+                  if (!when) {
+                    toast.error('Please select interview date and time')
+                    return
+                  }
+
                   scheduleAIMutation.mutate({
                     candidateId: selectedCandidate._id || selectedCandidate.id,
                     jobPostingId: selectedJob?._id,
                     scheduledAt: when,
-                    meetingLink: link,
+                    meetingLink: link || undefined,
+                    interviewNotes: notes,
+                    duration: parseInt(duration),
+                    autoInvite: autoInvite,
                     interviewers: [user.userId]
                   })
                 }}
               >
-                {scheduleAIMutation.isLoading ? 'Scheduling...' : 'Schedule'}
+                {scheduleAIMutation.isLoading ? (
+                  <>
+                    <LoadingSpinner size="sm" color="white" />
+                    <span>Scheduling...</span>
+                  </>
+                ) : (
+                  <>
+                    <CalendarIcon className="w-4 h-4" />
+                    <span>Schedule Interview</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

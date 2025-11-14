@@ -110,7 +110,7 @@ const Features = () => {
                 Ready to Experience These Features?
               </h2>
               <p className="text-blue-100 mb-6">
-                Start your free trial today and see how Mastersolis Infotech can transform your HR operations.
+                Start your free trial today and see how FWC can transform your HR operations.
               </p>
               <button className="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
                 Start Free Trial

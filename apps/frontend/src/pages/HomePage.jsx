@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Footer from '../components/Footer'
+import Logo from '../components/Logo'
 
 const HomePage = () => {
   const { user } = useAuth()
@@ -91,7 +92,7 @@ const HomePage = () => {
       name: 'Sarah Johnson',
       role: 'HR Director',
       company: 'TechCorp Inc.',
-      content: 'Mastersolis Infotech has revolutionized our digital presence. The AI-driven solutions and powerful features have transformed our business.',
+      content: 'FWC has revolutionized our digital presence. The AI-driven solutions and powerful features have transformed our business.',
       avatar: '👩‍💼'
     },
     {
@@ -126,15 +127,9 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-12 w-12 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                  </svg>
-                </div>
-              </div>
+              <Logo size="md" href="/" showText={false} />
               <div className="ml-4">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Mastersolis Infotech</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">FWC</h1>
                 <p className="text-sm text-gray-600 font-medium">AI-Driven Digital Solutions</p>
               </div>
             </div>
@@ -240,7 +235,7 @@ const HomePage = () => {
               Trusted by Leading Organizations
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Join businesses worldwide that have transformed their digital presence with Mastersolis Infotech
+              Join businesses worldwide that have transformed their digital presence with FWC
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -312,7 +307,7 @@ const HomePage = () => {
               What Our Customers Say
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Don't just take our word for it. Here's what industry leaders have to say about Mastersolis Infotech.
+              Don't just take our word for it. Here's what industry leaders have to say about FWC.
             </p>
           </div>
           
@@ -367,7 +362,7 @@ const HomePage = () => {
             Transform Your HR Operations Today
           </h2>
           <p className="text-lg text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Join businesses worldwide already using Mastersolis Infotech to transform their digital presence. 
+            Join businesses worldwide already using FWC to transform their digital presence. 
             Start your journey today and see the difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">

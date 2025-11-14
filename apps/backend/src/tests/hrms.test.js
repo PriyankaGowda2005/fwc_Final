@@ -9,7 +9,7 @@ let employeeToken = '';
 let departmentId = '';
 let employeeId = '';
 
-describe('Mastersolis Infotech System Tests', () => {
+describe('FWC Infotech System Tests', () => {
   beforeAll(async () => {
     // Clean up test data in correct order (respecting foreign key constraints)
     // First delete all dependent records

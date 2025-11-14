@@ -140,7 +140,7 @@ const CaseStudyItem = ({
 }
 
 /**
- * CaseCarousel Component - Mastersolis Infotech Design System
+ * CaseCarousel Component - FWC Infotech Design System
  * Accessible carousel with keyboard navigation and autoplay
  */
 const CaseCarousel = () => {
@@ -158,7 +158,7 @@ const CaseCarousel = () => {
         { value: "100%", label: "ATS Integration" },
         { value: "AI-Powered", label: "Recruitment" }
       ],
-      testimonial: "Mastersolis Infotech's AI ATS integration transformed our hiring process. We now receive 3× more qualified applicants and can process them efficiently with automated resume parsing and scoring.",
+      testimonial: "FWC Infotech's AI ATS integration transformed our hiring process. We now receive 3× more qualified applicants and can process them efficiently with automated resume parsing and scoring.",
       author: "Rajesh Kumar",
       position: "HR Director"
     },
@@ -171,7 +171,7 @@ const CaseCarousel = () => {
         { value: "AI-Optimized", label: "Content" },
         { value: "Real-time", label: "Analytics" }
       ],
-      testimonial: "The AI-optimized content from Mastersolis Infotech increased our conversion rates by 18%. Their intelligent content generation understands our audience and creates compelling copy that converts.",
+      testimonial: "The AI-optimized content from FWC Infotech increased our conversion rates by 18%. Their intelligent content generation understands our audience and creates compelling copy that converts.",
       author: "Priya Sharma",
       position: "Marketing Director"
     },
@@ -184,7 +184,7 @@ const CaseCarousel = () => {
         { value: "AI Summaries", label: "Analytics" },
         { value: "Real-time", label: "Insights" }
       ],
-      testimonial: "The AI analytics summaries from Mastersolis Infotech reduced our support queries by 40%. Users can now understand complex data at a glance, making our dashboard more intuitive and valuable.",
+      testimonial: "The AI analytics summaries from FWC Infotech reduced our support queries by 40%. Users can now understand complex data at a glance, making our dashboard more intuitive and valuable.",
       author: "Amit Patel",
       position: "Product Manager"
     }

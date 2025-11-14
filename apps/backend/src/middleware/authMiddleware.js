@@ -83,6 +83,31 @@ const authenticateCandidate = async (req, res, next) => {
     req.candidate = candidate;
     next();
   } catch (error) {
+    // Check if it's a database connection error
+    if (error.message && (
+      error.message.includes('MongoNetworkTimeoutError') ||
+      error.message.includes('MongoServerSelectionError') ||
+      error.message.includes('Database not connected') ||
+      error.message.includes('timeout')
+    )) {
+      console.error('Candidate token verification error (Database connection issue):', error.message);
+      return res.status(503).json({ 
+        success: false,
+        message: 'Database connection unavailable. Please try again later.',
+        error: 'SERVICE_UNAVAILABLE'
+      });
+    }
+    
+    // JWT verification errors
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      console.error('Candidate token verification error (JWT):', error.message);
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid or expired token',
+        error: error.name
+      });
+    }
+    
     console.error('Candidate token verification error:', error);
     return res.status(401).json({ 
       success: false,
@@ -129,6 +154,29 @@ const verifyToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    // Check if it's a database connection error
+    if (error.message && (
+      error.message.includes('MongoNetworkTimeoutError') ||
+      error.message.includes('MongoServerSelectionError') ||
+      error.message.includes('Database not connected') ||
+      error.message.includes('timeout')
+    )) {
+      console.error('Token verification error (Database connection issue):', error.message);
+      return res.status(503).json({ 
+        message: 'Database connection unavailable. Please try again later.',
+        error: 'SERVICE_UNAVAILABLE'
+      });
+    }
+    
+    // JWT verification errors
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      console.error('Token verification error (JWT):', error.message);
+      return res.status(401).json({ 
+        message: 'Invalid or expired token',
+        error: error.name
+      });
+    }
+    
     console.error('Token verification error:', error);
     return res.status(401).json({ message: 'Invalid token' });
   }

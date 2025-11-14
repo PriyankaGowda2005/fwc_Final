@@ -12,11 +12,11 @@ if (process.env.RESEND_API_KEY) {
 // Email templates
 const emailTemplates = {
   candidate_invitation: {
-    subject: 'Invitation to Join Mastersolis Infotech Talent Pool',
+    subject: 'Invitation to Join FWC Infotech Talent Pool',
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Talent Acquisition Portal</p>
         </div>
         
@@ -24,7 +24,7 @@ const emailTemplates = {
         
         <p>Dear ${data.candidateName || 'Candidate'},</p>
         
-        <p>We are excited to invite you to join our talent pool at Mastersolis Infotech. We believe your skills and experience could be a great fit for our organization.</p>
+        <p>We are excited to invite you to join our talent pool at FWC Infotech. We believe your skills and experience could be a great fit for our organization.</p>
         
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 20px 0;">
           <h3 style="margin-top: 0; color: #1f2937;">What's Next?</h3>
@@ -57,8 +57,8 @@ const emailTemplates = {
         
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
-          <strong>Mastersolis Infotech HR Team</strong><br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          <strong>FWC Infotech HR Team</strong><br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
@@ -80,7 +80,7 @@ const emailTemplates = {
         </div>
         
         <p>Please review the candidate's profile and schedule an interview if appropriate.</p>
-        <p>Best regards,<br>Mastersolis Infotech System</p>
+        <p>Best regards,<br>FWC Infotech System</p>
       </div>
     `
   },
@@ -90,7 +90,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Interview Notification</p>
         </div>
         
@@ -170,8 +170,8 @@ const emailTemplates = {
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
           <strong>${data.scheduledByName}</strong><br>
-          Mastersolis Infotech HR Team<br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          FWC Infotech HR Team<br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
@@ -182,7 +182,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Interview Update</p>
         </div>
         
@@ -246,8 +246,8 @@ const emailTemplates = {
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
           <strong>${data.rescheduledByName}</strong><br>
-          Mastersolis Infotech HR Team<br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          FWC Infotech HR Team<br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
@@ -258,7 +258,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Interview Update</p>
         </div>
         
@@ -289,8 +289,8 @@ const emailTemplates = {
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
           <strong>${data.cancelledByName}</strong><br>
-          Mastersolis Infotech HR Team<br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          FWC Infotech HR Team<br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
@@ -301,7 +301,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Interview Reminder</p>
         </div>
         
@@ -350,8 +350,8 @@ const emailTemplates = {
         
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
-          <strong>Mastersolis Infotech HR Team</strong><br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          <strong>FWC Infotech HR Team</strong><br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
@@ -362,7 +362,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Reschedule Request</p>
         </div>
         
@@ -401,25 +401,25 @@ const emailTemplates = {
         
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
-          <strong>Mastersolis Infotech System</strong><br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          <strong>FWC Infotech System</strong><br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
   },
 
   employee_welcome: {
-    subject: 'Welcome to Mastersolis Infotech! Your Employee Account is Ready',
+    subject: 'Welcome to FWC Infotech! Your Employee Account is Ready',
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">🎉 Welcome to Mastersolis Infotech!</h1>
+          <h1 style="color: #2563eb; margin: 0;">🎉 Welcome to FWC Infotech!</h1>
           <p style="color: #6b7280; margin: 5px 0;">Congratulations on joining our team!</p>
         </div>
         
         <h2 style="color: #1f2937;">Welcome, ${data.employeeName}!</h2>
         
-        <p>We're thrilled to welcome you to the Mastersolis Infotech family! You've successfully completed our interview process and we're excited to have you join our team.</p>
+        <p>We're thrilled to welcome you to the FWC Infotech family! You've successfully completed our interview process and we're excited to have you join our team.</p>
         
         <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 20px; margin: 20px 0;">
           <h3 style="margin-top: 0; color: #0c4a6e;">Your New Role Details</h3>
@@ -488,8 +488,8 @@ const emailTemplates = {
         
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
-          <strong>Mastersolis Infotech HR Team</strong><br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a><br>
+          <strong>FWC Infotech HR Team</strong><br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a><br>
           Phone: (555) 123-4567
         </p>
       </div>
@@ -501,7 +501,7 @@ const emailTemplates = {
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+          <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
           <p style="color: #6b7280; margin: 5px 0;">Hiring Notification</p>
         </div>
         
@@ -563,15 +563,15 @@ const emailTemplates = {
         
         <p style="color: #6b7280; font-size: 14px;">
           Best regards,<br>
-          <strong>Mastersolis Infotech System</strong><br>
-          <a href="mailto:hr@mastersolisinfotech.com" style="color: #2563eb;">hr@mastersolisinfotech.com</a>
+          <strong>FWC Infotech System</strong><br>
+          <a href="mailto:hr@FWCinfotech.com" style="color: #2563eb;">hr@FWCinfotech.com</a>
         </p>
       </div>
     `
   },
 
   application_received: {
-    subject: 'Application Received - Mastersolis Infotech',
+    subject: 'Application Received - FWC Infotech',
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2563eb;">Application Received</h2>
@@ -579,13 +579,13 @@ const emailTemplates = {
         <p>Thank you for your interest in the ${data.jobTitle} position.</p>
         <p>We have received your application and our team will review it shortly.</p>
         <p>You will hear from us within 5 business days.</p>
-        <p>Best regards,<br>Mastersolis Infotech HR Team</p>
+        <p>Best regards,<br>FWC Infotech HR Team</p>
       </div>
     `
   },
 
   application_rejected: {
-    subject: 'Application Update - Mastersolis Infotech',
+    subject: 'Application Update - FWC Infotech',
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2563eb;">Application Status Update</h2>
@@ -594,13 +594,13 @@ const emailTemplates = {
         <p>After careful consideration, we have decided to move forward with other candidates at this time.</p>
         ${data.reason ? `<p><strong>Reason:</strong> ${data.reason}</p>` : ''}
         <p>We encourage you to apply for other positions that match your experience.</p>
-        <p>Best regards,<br>Mastersolis Infotech HR Team</p>
+        <p>Best regards,<br>FWC Infotech HR Team</p>
       </div>
     `
   },
 
   leave_approved: {
-    subject: 'Leave Request Approved - Mastersolis Infotech',
+    subject: 'Leave Request Approved - FWC Infotech',
     html: (data) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2563eb;">Leave Request Approved</h2>
@@ -616,7 +616,7 @@ const emailTemplates = {
         </div>
         
         <p>Please ensure your work coverage is arranged before your leave period.</p>
-        <p>Best regards,<br>Mastersolis Infotech HR Team</p>
+        <p>Best regards,<br>FWC Infotech HR Team</p>
       </div>
     `
   }
@@ -651,7 +651,7 @@ const sendEmail = async (jobData) => {
     
     // Send email using Resend
     const emailData = {
-      from: process.env.RESEND_FROM || 'Mastersolis Infotech <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM || 'FWC Infotech <onboarding@resend.dev>',
       to: recipients,
       cc: ccRecipients.length > 0 ? ccRecipients : undefined,
       bcc: bccRecipients.length > 0 ? bccRecipients : undefined,

@@ -109,7 +109,7 @@ const Contact = () => {
       </div>
     </div>
     <div class="footer">
-      <p>This email was automatically generated from the Mastersolis Infotech website contact form.</p>
+      <p>This email was automatically generated from the FWC website contact form.</p>
       <p>Submitted at: ${new Date().toLocaleString()}</p>
     </div>
   </div>
@@ -158,17 +158,17 @@ const Contact = () => {
   // QR Code component for address
   const QRCodeComponent = () => {
     const addressData = {
-      name: "Mastersolis Infotech",
+      name: "FWC",
       address: "Innovation Hub, 4th Floor, Techpark, Bengaluru, Karnataka, India",
       phone: "+91-80-1234-5678",
-      email: "hello@mastersolis.com",
-      website: "https://mastersolis.com"
+      email: "hello@fwc.com",
+      website: "https://fwc.com"
     }
     
     const qrValue = `BEGIN:VCARD
 VERSION:3.0
 FN:${addressData.name}
-ORG:Mastersolis Infotech
+ORG:FWC
 ADR:;;${addressData.address};;;;
 TEL:${addressData.phone}
 EMAIL:${addressData.email}
@@ -204,7 +204,7 @@ END:VCARD`
           allowFullScreen=""
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Mastersolis Infotech Location - Bengaluru, India"
+          title="FWC Location - Bengaluru, India"
           className="rounded-lg sm:rounded-xl"
         />
       </div>
@@ -442,7 +442,8 @@ END:VCARD`
                     </div>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
-                    <a href="mailto:hello@mastersolis.com" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium break-all">hello@mastersolis.com</a>
+                    <a href="mailto:hr@fwc.co.in" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium break-all">HR: hr@fwc.co.in</a>
+                    <a href="mailto:support@fwc.co.in" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium break-all">Support: support@fwc.co.in</a>
                   </div>
                 </div>
 
@@ -457,7 +458,8 @@ END:VCARD`
                     <h3 className="text-lg sm:text-xl font-bold text-white">Phone</h3>
                   </div>
                   <div className="space-y-2 sm:space-y-3">
-                    <a href="tel:+918012345678" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium">🇮🇳 India: +91-80-1234-5678</a>
+                    <a href="tel:+918026597566" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium">🇮🇳 India: +91 8026 597 566</a>
+                    <a href="tel:+14089142832" className="block text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm sm:text-base lg:text-lg font-medium">🌍 Global: +1 (408) 914-2832</a>
                   </div>
                 </div>
 
@@ -477,10 +479,25 @@ END:VCARD`
                   </div>
                   <div className="mb-4 sm:mb-6">
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                      <span className="font-semibold text-white">Mastersolis Infotech</span><br />
-                      Innovation Hub, 4th Floor, Techpark,<br />
-                      Bengaluru, Karnataka, India
+                      <span className="font-semibold text-white">FWC IT SERVICES PRIVATE LIMITED</span><br />
+                      4th Floor, 1348, 7th Avenue<br />
+                      Opposite Yes Bank<br />
+                      Jayanagara 9th Block, Jayanagar<br />
+                      Bengaluru, Karnataka 560041<br />
+                      India
                     </p>
+                    <a 
+                      href="https://maps.google.com/?q=4th+Floor,+1348,+7th+Avenue,+Jayanagara+9th+Block,+Jayanagar,+Bengaluru,+Karnataka+560041" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 text-sm mt-2 inline-flex items-center transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Open in Google Maps
+                    </a>
                   </div>
                   <QRCodeComponent />
                 </div>

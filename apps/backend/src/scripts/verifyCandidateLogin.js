@@ -8,7 +8,7 @@ async function verifyCandidateLogin() {
     await database.connect();
     console.log('✅ Connected');
 
-    const email = 'candidate.demo@mastersolisinfotech.com';
+    const email = 'candidate.demo@FWCinfotech.com';
     const password = 'candidate123';
 
     // Find candidate

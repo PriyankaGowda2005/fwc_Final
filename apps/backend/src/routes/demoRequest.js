@@ -31,7 +31,7 @@ const formatEmailData = (formData) => {
   return {
     to_email: process.env.DEMO_REQUEST_EMAIL || 'abhi8861375377@gmail.com',
     from_name: formData.name || 'Website Visitor',
-    from_email: formData.email || 'noreply@mastersolisinfotech.com',
+    from_email: formData.email || 'noreply@FWCinfotech.com',
     phone: formData.phone || 'Not provided',
     location: formData.location || 'Not provided',
     company_type: formData.companyType || 'Not provided',
@@ -97,7 +97,7 @@ const formatEmailData = (formData) => {
       </div>
     </div>
     <div class="footer">
-      <p>This email was automatically generated from the Mastersolis Infotech website contact form.</p>
+      <p>This email was automatically generated from the FWC Infotech website contact form.</p>
       <p>Submitted at: ${new Date().toLocaleString()}</p>
     </div>
   </div>

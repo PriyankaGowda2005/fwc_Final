@@ -91,7 +91,7 @@ const comprehensiveSeedData = async () => {
     const employeeData = [
       // Admin
       {
-        email: 'admin@mastersolisinfotech.com',
+        email: 'admin@FWCinfotech.com',
         username: 'admin',
         password: await bcrypt.hash('admin123', 12),
         role: 'ADMIN',
@@ -109,7 +109,7 @@ const comprehensiveSeedData = async () => {
       },
       // HR Manager
       {
-        email: 'hr@mastersolisinfotech.com',
+        email: 'hr@FWCinfotech.com',
         username: 'hr_manager',
         password: await bcrypt.hash('HR@2024!', 12),
         role: 'HR',
@@ -127,7 +127,7 @@ const comprehensiveSeedData = async () => {
       },
       // IT Manager
       {
-        email: 'manager@mastersolisinfotech.com',
+        email: 'manager@FWCinfotech.com',
         username: 'it_manager',
         password: await bcrypt.hash('manager123', 12),
         role: 'MANAGER',
@@ -145,7 +145,7 @@ const comprehensiveSeedData = async () => {
       },
       // Finance Manager
       {
-        email: 'finance.manager@mastersolisinfotech.com',
+        email: 'finance.manager@FWCinfotech.com',
         username: 'finance_manager',
         password: await bcrypt.hash('finance123', 12),
         role: 'MANAGER',
@@ -163,7 +163,7 @@ const comprehensiveSeedData = async () => {
       },
       // Marketing Manager
       {
-        email: 'marketing.manager@mastersolisinfotech.com',
+        email: 'marketing.manager@FWCinfotech.com',
         username: 'marketing_manager',
         password: await bcrypt.hash('marketing123', 12),
         role: 'MANAGER',
@@ -181,7 +181,7 @@ const comprehensiveSeedData = async () => {
       },
       // IT Employee 1
       {
-        email: 'employee@mastersolisinfotech.com',
+        email: 'employee@FWCinfotech.com',
         username: 'employee',
         password: await bcrypt.hash('employee123', 12),
         role: 'EMPLOYEE',
@@ -200,7 +200,7 @@ const comprehensiveSeedData = async () => {
       },
       // IT Employee 2
       {
-        email: 'jane.smith@mastersolisinfotech.com',
+        email: 'jane.smith@FWCinfotech.com',
         username: 'jane_smith',
         password: await bcrypt.hash('employee123', 12),
         role: 'EMPLOYEE',
@@ -219,7 +219,7 @@ const comprehensiveSeedData = async () => {
       },
       // Finance Employee
       {
-        email: 'robert.brown@mastersolisinfotech.com',
+        email: 'robert.brown@FWCinfotech.com',
         username: 'robert_brown',
         password: await bcrypt.hash('employee123', 12),
         role: 'EMPLOYEE',
@@ -238,7 +238,7 @@ const comprehensiveSeedData = async () => {
       },
       // Marketing Employee
       {
-        email: 'lisa.anderson@mastersolisinfotech.com',
+        email: 'lisa.anderson@FWCinfotech.com',
         username: 'lisa_anderson',
         password: await bcrypt.hash('employee123', 12),
         role: 'EMPLOYEE',
@@ -257,7 +257,7 @@ const comprehensiveSeedData = async () => {
       },
       // HR Employee
       {
-        email: 'james.wilson@mastersolisinfotech.com',
+        email: 'james.wilson@FWCinfotech.com',
         username: 'james_wilson',
         password: await bcrypt.hash('employee123', 12),
         role: 'EMPLOYEE',
@@ -672,7 +672,7 @@ const comprehensiveSeedData = async () => {
     // Candidates
     const candidates = [
       {
-        email: 'candidate.demo@mastersolisinfotech.com',
+        email: 'candidate.demo@FWCinfotech.com',
         password: await bcrypt.hash('candidate123', 12),
         firstName: 'Demo',
         lastName: 'Candidate',
@@ -992,11 +992,11 @@ const comprehensiveSeedData = async () => {
     console.log(`✅ 4 Summary Reports`);
     console.log('\n🔐 Login Credentials:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('Admin:    admin@mastersolisinfotech.com / admin123');
-    console.log('HR:       hr@mastersolisinfotech.com / HR@2024!');
-    console.log('Manager:  manager@mastersolisinfotech.com / manager123');
-    console.log('Employee: employee@mastersolisinfotech.com / employee123');
-    console.log('Candidate: candidate.demo@mastersolisinfotech.com / candidate123');
+    console.log('Admin:    admin@FWCinfotech.com / admin123');
+    console.log('HR:       hr@FWCinfotech.com / HR@2024!');
+    console.log('Manager:  manager@FWCinfotech.com / manager123');
+    console.log('Employee: employee@FWCinfotech.com / employee123');
+    console.log('Candidate: candidate.demo@FWCinfotech.com / candidate123');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     // Disconnect from database

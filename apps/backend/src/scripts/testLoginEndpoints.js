@@ -49,7 +49,7 @@ async function testAllLogins() {
     hr: await testLogin('/auth/login', 'hr@fwchrms.com', 'HR@2024!', 'HR'),
     manager: await testLogin('/auth/login', 'manager@fwcit.com', 'manager123', 'MANAGER'),
     employee: await testLogin('/auth/login', 'employee@fwcit.com', 'employee123', 'EMPLOYEE'),
-    candidate: await testLogin('/candidates/login', 'candidate.demo@mastersolisinfotech.com', 'candidate123', 'CANDIDATE')
+    candidate: await testLogin('/candidates/login', 'candidate.demo@FWCinfotech.com', 'candidate123', 'CANDIDATE')
   };
 
   console.log('\n📊 Results Summary:\n');

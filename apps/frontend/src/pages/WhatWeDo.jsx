@@ -8,7 +8,7 @@ import Icon from '../components/UI/Icon'
 import { staggerContainer, itemFadeIn } from '../components/motionVariants'
 
 /**
- * What We Do Page - Mastersolis Infotech Design System
+ * What We Do Page - FWC Infotech Design System
  * Showcases our comprehensive AI-driven digital solutions and capabilities
  */
 const WhatWeDo = () => {

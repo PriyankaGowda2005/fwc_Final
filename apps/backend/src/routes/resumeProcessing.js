@@ -467,7 +467,347 @@ router.get('/download-template/:resumeId', verifyToken, async (req, res) => {
   }
 });
 
-// Get job recommendations for a candidate based on their resume
+// Get candidate's resume details with ATS scores and analysis
+router.get('/candidate-resume', authenticateCandidate, async (req, res) => {
+  try {
+    const candidateId = req.candidateId;
+    
+    // Get candidate's primary resume
+    const resume = await database.findOne('candidate_resumes', {
+      candidateId: candidateId,
+      status: 'UPLOADED'
+    }, { sort: { uploadedAt: -1 } });
+
+    if (!resume) {
+      return res.status(404).json({
+        success: false,
+        message: 'No resume found. Please upload a resume first.'
+      });
+    }
+
+    // Get extracted data
+    const extractedData = resume.extractedData || {};
+    
+    // Extract skills - handle various data structures
+    let skills = [];
+    if (extractedData.skills) {
+      if (Array.isArray(extractedData.skills)) {
+        skills = extractedData.skills.filter(s => s && typeof s === 'string');
+      } else if (typeof extractedData.skills === 'object') {
+        if (extractedData.skills.all && Array.isArray(extractedData.skills.all)) {
+          skills = extractedData.skills.all.filter(s => s && typeof s === 'string');
+        } else if (extractedData.skills.technical && Array.isArray(extractedData.skills.technical)) {
+          skills = extractedData.skills.technical.filter(s => s && typeof s === 'string');
+        } else if (extractedData.skills.soft && Array.isArray(extractedData.skills.soft)) {
+          skills = extractedData.skills.soft.filter(s => s && typeof s === 'string');
+        }
+      }
+    }
+
+    // Get all published job postings for ATS score calculation
+    const jobPostings = await database.find('job_postings', {
+      status: 'PUBLISHED'
+    }) || [];
+
+    const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+    const atsScores = [];
+    let averageAtsScore = 0;
+    let maxAtsScore = 0;
+    let topJobMatch = null;
+
+    // Calculate ATS scores for top 10 jobs (or all if less than 10)
+    const topJobs = jobPostings.slice(0, Math.min(10, jobPostings.length));
+    for (const job of topJobs) {
+      try {
+        const response = await fetch(`${mlServiceUrl}/api/resume/ats-score`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file_path: resume.filePath,
+            job_requirements: job.requirements || [],
+            job_title: job.title,
+            job_description: job.description,
+            extracted_data: resume.extractedData
+          })
+        });
+
+        let atsScoreData = null;
+        if (response.ok) {
+          const result = await response.json();
+          atsScoreData = result.data || null;
+        } else {
+          // Fallback calculation when ML service is unavailable
+          const jobRequirements = Array.isArray(job.requirements) ? job.requirements : [];
+          const jobReqLower = jobRequirements.map(r => String(r).toLowerCase());
+          const skillsLower = skills.map(s => String(s).toLowerCase());
+          
+          const matchingSkills = skills.filter(skill => {
+            const skillLower = String(skill).toLowerCase();
+            return jobReqLower.some(req => req.includes(skillLower) || skillLower.includes(req));
+          });
+          
+          const overallScore = jobRequirements.length > 0
+            ? Math.round((matchingSkills.length / jobRequirements.length) * 100)
+            : 50;
+          
+          const missingSkills = jobRequirements.filter(req => {
+            const reqLower = String(req).toLowerCase();
+            return !skillsLower.some(skill => skill.includes(reqLower) || reqLower.includes(skill));
+          });
+          
+          atsScoreData = {
+            overallScore: Math.min(100, Math.max(0, overallScore)),
+            matchedSkills: matchingSkills,
+            missingSkills: missingSkills,
+            skillMatch: matchingSkills.length,
+            totalRequiredSkills: jobRequirements.length
+          };
+        }
+
+        if (atsScoreData) {
+          const score = atsScoreData.overallScore || 0;
+          atsScores.push({
+            jobPostingId: job._id,
+            jobTitle: job.title,
+            department: job.department,
+            score: score,
+            matchedSkills: atsScoreData.matchedSkills || [],
+            missingSkills: atsScoreData.missingSkills || [],
+            skillMatch: atsScoreData.skillMatch || 0,
+            totalRequiredSkills: atsScoreData.totalRequiredSkills || 0
+          });
+
+          averageAtsScore += score;
+          if (score > maxAtsScore) {
+            maxAtsScore = score;
+            topJobMatch = {
+              jobPostingId: job._id,
+              jobTitle: job.title,
+              department: job.department,
+              score: score,
+              matchedSkills: atsScoreData.matchedSkills || [],
+              missingSkills: atsScoreData.missingSkills || []
+            };
+          }
+        }
+      } catch (error) {
+        console.error(`Error calculating ATS score for job ${job._id}:`, error);
+      }
+    }
+
+    if (atsScores.length > 0) {
+      averageAtsScore = Math.round(averageAtsScore / atsScores.length);
+    } else {
+      // If no jobs available, set default scores
+      averageAtsScore = 0;
+      maxAtsScore = 0;
+    }
+
+    // Generate improvement suggestions based on ATS scores
+    const suggestions = [];
+    
+    if (averageAtsScore < 50) {
+      suggestions.push({
+        type: 'critical',
+        title: 'Low ATS Score',
+        description: 'Your resume has a low average ATS score. Consider adding more relevant keywords and skills.',
+        action: 'Add more industry-specific keywords and technical skills to your resume.'
+      });
+    } else if (averageAtsScore < 70) {
+      suggestions.push({
+        type: 'warning',
+        title: 'Moderate ATS Score',
+        description: 'Your resume could be improved to increase your chances of getting noticed.',
+        action: 'Focus on adding missing skills and keywords that appear in job descriptions.'
+      });
+    }
+
+    // Check for missing skills across top jobs
+    const allMissingSkills = new Set();
+    atsScores.forEach(score => {
+      score.missingSkills.forEach(skill => allMissingSkills.add(skill));
+    });
+
+    if (allMissingSkills.size > 0) {
+      suggestions.push({
+        type: 'info',
+        title: 'Common Missing Skills',
+        description: `These skills appear frequently in job postings but are missing from your resume: ${Array.from(allMissingSkills).slice(0, 5).join(', ')}`,
+        action: 'Consider adding these skills if you have experience with them.'
+      });
+    }
+
+    // Check experience
+    const experienceYears = extractedData.experience?.totalYears || 0;
+    if (experienceYears < 2) {
+      suggestions.push({
+        type: 'info',
+        title: 'Experience Level',
+        description: 'You have limited work experience. Highlight projects, internships, and relevant coursework.',
+        action: 'Emphasize projects, certifications, and any relevant experience you have.'
+      });
+    }
+
+    // Check education
+    const education = extractedData.education || [];
+    if (education.length === 0) {
+      suggestions.push({
+        type: 'warning',
+        title: 'Education Section',
+        description: 'No education information found in your resume.',
+        action: 'Add your educational background, including degrees, certifications, and relevant coursework.'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        resume: {
+          _id: resume._id,
+          fileName: resume.fileName,
+          originalName: resume.originalName,
+          uploadedAt: resume.uploadedAt,
+          processingStatus: resume.processingStatus,
+          extractedData: {
+            fullName: extractedData.fullName,
+            email: extractedData.email,
+            phone: extractedData.phone,
+            skills: skills,
+            experience: extractedData.experience,
+            education: extractedData.education,
+            summary: extractedData.summary
+          }
+        },
+        atsAnalysis: {
+          averageScore: averageAtsScore,
+          maxScore: maxAtsScore,
+          topJobMatch: topJobMatch,
+          scores: atsScores.slice(0, 5) // Top 5 scores
+        },
+        suggestions: suggestions,
+        skills: {
+          extracted: skills,
+          count: skills.length
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Get candidate resume error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// Get job recommendations for a candidate (candidate-specific endpoint)
+router.get('/my-job-recommendations', authenticateCandidate, async (req, res) => {
+  try {
+    const candidateId = req.candidateId;
+    
+    // Get candidate's primary resume
+    const resume = await database.findOne('candidate_resumes', {
+      candidateId: candidateId,
+      status: 'UPLOADED'
+    }, { sort: { uploadedAt: -1 } });
+
+    if (!resume || !resume.extractedData) {
+      return res.status(400).json({
+        success: false,
+        message: 'Resume not processed yet. Please upload and process a resume first.'
+      });
+    }
+
+    // Get all published job postings
+    const jobPostings = await database.find('job_postings', {
+      status: 'PUBLISHED'
+    });
+
+    const recommendations = [];
+    const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+
+    // Calculate ATS score for each job posting
+    for (const job of jobPostings) {
+      try {
+        const response = await fetch(`${mlServiceUrl}/api/resume/ats-score`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file_path: resume.filePath,
+            job_requirements: job.requirements || [],
+            job_title: job.title,
+            job_description: job.description,
+            extracted_data: resume.extractedData
+          })
+        });
+
+        let atsScore = 0;
+        if (response.ok) {
+          const result = await response.json();
+          atsScore = result.data?.overallScore || 0;
+        } else {
+          // Fallback calculation
+          const extractedSkills = resume.extractedData.skills || [];
+          const jobRequirements = job.requirements || [];
+          const matchingSkills = extractedSkills.filter(skill =>
+            jobRequirements.some(req => req.toLowerCase().includes(skill.toLowerCase()) ||
+              skill.toLowerCase().includes(req.toLowerCase()))
+          );
+          atsScore = jobRequirements.length > 0
+            ? Math.round((matchingSkills.length / jobRequirements.length) * 100)
+            : 50;
+        }
+
+        recommendations.push({
+          jobPostingId: job._id,
+          title: job.title,
+          department: job.department,
+          location: job.location,
+          employmentType: job.employmentType,
+          atsScore: atsScore,
+          matchReason: atsScore >= 80 ? 'Excellent Match' :
+                      atsScore >= 60 ? 'Good Match' :
+                      atsScore >= 40 ? 'Moderate Match' : 'Low Match'
+        });
+      } catch (error) {
+        console.error(`Error calculating score for job ${job._id}:`, error);
+        // Skip this job if calculation fails
+      }
+    }
+
+    // Sort by ATS score descending
+    recommendations.sort((a, b) => b.atsScore - a.atsScore);
+
+    const candidate = await database.findOne('candidates', { _id: candidateId });
+
+    res.json({
+      success: true,
+      data: {
+        candidateId: candidateId,
+        candidateName: candidate?.name || `${candidate?.firstName || ''} ${candidate?.lastName || ''}`.trim(),
+        recommendations: recommendations,
+        totalJobs: recommendations.length,
+        topMatches: recommendations.filter(r => r.atsScore >= 70).length
+      }
+    });
+
+  } catch (error) {
+    console.error('Job recommendations error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// Get job recommendations for a candidate based on their resume (HR/Admin endpoint)
 router.get('/job-recommendations/:candidateId', verifyToken, async (req, res) => {
   try {
     const { candidateId } = req.params;

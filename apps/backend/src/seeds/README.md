@@ -46,17 +46,17 @@ npm run db:create-demo-users
 
 After running the comprehensive seed script, you can log in with:
 
-- **Admin**: `admin@mastersolisinfotech.com` / `admin123`
-- **HR Manager**: `hr@mastersolisinfotech.com` / `HR@2024!`
-- **IT Manager**: `manager@mastersolisinfotech.com` / `manager123`
-- **Finance Manager**: `finance.manager@mastersolisinfotech.com` / `finance123`
-- **Marketing Manager**: `marketing.manager@mastersolisinfotech.com` / `marketing123`
-- **Employee (IT)**: `employee@mastersolisinfotech.com` / `employee123`
-- **Employee (IT)**: `jane.smith@mastersolisinfotech.com` / `employee123`
-- **Employee (Finance)**: `robert.brown@mastersolisinfotech.com` / `employee123`
-- **Employee (Marketing)**: `lisa.anderson@mastersolisinfotech.com` / `employee123`
-- **Employee (HR)**: `james.wilson@mastersolisinfotech.com` / `employee123`
-- **Candidate**: `candidate.demo@mastersolisinfotech.com` / `candidate123`
+- **Admin**: `admin@FWCinfotech.com` / `admin123`
+- **HR Manager**: `hr@FWCinfotech.com` / `HR@2024!`
+- **IT Manager**: `manager@FWCinfotech.com` / `manager123`
+- **Finance Manager**: `finance.manager@FWCinfotech.com` / `finance123`
+- **Marketing Manager**: `marketing.manager@FWCinfotech.com` / `marketing123`
+- **Employee (IT)**: `employee@FWCinfotech.com` / `employee123`
+- **Employee (IT)**: `jane.smith@FWCinfotech.com` / `employee123`
+- **Employee (Finance)**: `robert.brown@FWCinfotech.com` / `employee123`
+- **Employee (Marketing)**: `lisa.anderson@FWCinfotech.com` / `employee123`
+- **Employee (HR)**: `james.wilson@FWCinfotech.com` / `employee123`
+- **Candidate**: `candidate.demo@FWCinfotech.com` / `candidate123`
 
 ## Sample Data Details
 

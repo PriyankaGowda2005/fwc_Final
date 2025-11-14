@@ -6,7 +6,7 @@ const { seedData } = require('../seeds/seedData');
 
 const initDatabase = async () => {
   try {
-    console.log('🚀 Initializing Mastersolis Infotech Database...');
+    console.log('🚀 Initializing FWC Infotech Database...');
     
     // Connect to database
     await database.connect();

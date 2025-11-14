@@ -73,7 +73,7 @@ const TestDataDisplay = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🎉 Mastersolis Infotech Integration Test
+            🎉 FWC Infotech Integration Test
           </h1>
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded inline-block">
             ✅ All systems operational - MongoDB Atlas connected!

@@ -187,7 +187,7 @@ const WhoWeServe = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg md:text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed"
               >
-                At Mastersolis Infotech, we empower organizations of all sizes — from startups to global enterprises — with tailored Human Resource Management solutions. Our platform adapts to your industry's unique needs, compliance standards, and workforce challenges.
+                At FWC Infotech, we empower organizations of all sizes — from startups to global enterprises — with tailored Human Resource Management solutions. Our platform adapts to your industry's unique needs, compliance standards, and workforce challenges.
               </motion.p>
             </div>
           </section>
@@ -239,7 +239,7 @@ const WhoWeServe = () => {
                   Industries We Serve
                 </h2>
                 <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-                  Discover how Mastersolis Infotech transforms workforce management across diverse sectors
+                  Discover how FWC Infotech transforms workforce management across diverse sectors
                 </p>
                 <p className="text-base text-gray-500 max-w-2xl mx-auto">
                   Our platform is designed to adapt to the unique requirements, compliance standards, and operational challenges of each industry.
@@ -328,7 +328,7 @@ const WhoWeServe = () => {
                 className="text-center mb-12"
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Why Industries Choose Mastersolis Infotech
+                  Why Industries Choose FWC Infotech
                 </h2>
                 <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                   Comprehensive solutions designed to meet the unique needs of every sector
@@ -515,7 +515,7 @@ const WhoWeServe = () => {
                 {
                   industry: 'Technology',
                   company: 'TechCorp Solutions',
-                  quote: 'Mastersolis Infotech helped us scale from 200 to 2,000 employees seamlessly. The automated onboarding reduced our time-to-productivity by 40%.',
+                  quote: 'FWC Infotech helped us scale from 200 to 2,000 employees seamlessly. The automated onboarding reduced our time-to-productivity by 40%.',
                   author: 'Sarah Johnson',
                   role: 'VP of People Operations',
                   metric: '40% faster onboarding'
@@ -531,7 +531,7 @@ const WhoWeServe = () => {
                 {
                   industry: 'Retail',
                   company: 'Global Retail Chain',
-                  quote: 'Managing 500+ locations became simple with Mastersolis Infotech. Real-time scheduling and payroll automation saved us 30 hours per week.',
+                  quote: 'Managing 500+ locations became simple with FWC Infotech. Real-time scheduling and payroll automation saved us 30 hours per week.',
                   author: 'Emma Rodriguez',
                   role: 'HR Director',
                   metric: '30 hours saved weekly'
@@ -640,7 +640,7 @@ const WhoWeServe = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg md:text-xl text-blue-100 mb-6"
               >
-                Join thousands of organizations that trust Mastersolis Infotech to streamline their workforce management. Get started with a free consultation today.
+                Join thousands of organizations that trust FWC Infotech to streamline their workforce management. Get started with a free consultation today.
               </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

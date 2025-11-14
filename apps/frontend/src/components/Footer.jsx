@@ -69,7 +69,7 @@ const SocialLink = ({ href, icon, label }) => {
 }
 
 /**
- * Footer Component - Mastersolis Infotech Design System
+ * Footer Component - FWC Infotech Design System
  * Multi-column footer with office addresses, social links, and company information
  */
 const Footer = () => {
@@ -77,7 +77,7 @@ const Footer = () => {
 
   // Main navigation links (prominently displayed)
   const mainNavigationLinks = [
-    { href: '/', label: 'Mastersolis Infotech' },
+    { href: '/', label: 'FWC Infotech' },
     { href: '/who-we-serve', label: 'Who we serve' },
     { href: '/what-we-do', label: 'What we do' },
     { href: '/who-we-are', label: 'Who we are' },
@@ -134,15 +134,30 @@ const Footer = () => {
   const offices = [
     {
       city: 'Bengaluru',
-      address: 'Innovation Hub, 4th Floor, Techpark',
-      details: 'Bengaluru, Karnataka, India'
+      address: '4th Floor, 1348, 7th Avenue, Opposite Yes Bank, Jayanagara 9th Block, Jayanagar',
+      details: 'Bengaluru, Karnataka 560041, India',
+      mapUrl: 'https://maps.google.com/?q=4th+Floor,+1348,+7th+Avenue,+Jayanagara+9th+Block,+Jayanagar,+Bengaluru,+Karnataka+560041'
     }
   ]
 
+  const contactInfo = {
+    companyName: 'FWC IT SERVICES PRIVATE LIMITED',
+    website: 'https://fwc.co.in',
+    email: {
+      hr: 'hr@fwc.co.in',
+      support: 'support@fwc.co.in'
+    },
+    phone: {
+      india: '+91 8026 597 566',
+      global: '+1 (408) 914-2832'
+    },
+    github: 'https://github.com/PriyankaGowda2005/FWC-HRMS'
+  }
+
   const socialLinks = [
-    { href: 'https://www.instagram.com/mastersolis_infotech/', icon: 'instagram', label: 'Instagram' },
-    { href: 'https://www.facebook.com/mastersolis', icon: 'facebook', label: 'Facebook' },
-    { href: 'https://www.linkedin.com/company/mastersolis', icon: 'linkedin', label: 'LinkedIn' }
+    { href: 'https://www.instagram.com/fwcinc/', icon: 'instagram', label: 'Instagram' },
+    { href: 'https://x.com/FWC_Inc', icon: 'twitter', label: 'Twitter/X' },
+    { href: 'https://www.linkedin.com/company/fwc-it-services-pvt-ltd/', icon: 'linkedin', label: 'LinkedIn' }
   ]
 
   return (
@@ -173,6 +188,28 @@ const Footer = () => {
                 Crafting Intelligent Web Experiences — AI-Driven, Business-Ready. 
                 Empowering businesses with intelligent, automated website and content solutions.
               </p>
+
+              {/* Contact Information */}
+              <div className="space-y-3">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Email</p>
+                  <a href={`mailto:${contactInfo.email.hr}`} className="text-gray-300 hover:text-white text-sm transition-colors">
+                    {contactInfo.email.hr}
+                  </a>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Phone</p>
+                  <a href={`tel:${contactInfo.phone.india.replace(/\s/g, '')}`} className="text-gray-300 hover:text-white text-sm transition-colors">
+                    {contactInfo.phone.india}
+                  </a>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Website</p>
+                  <a href={contactInfo.website} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white text-sm transition-colors">
+                    {contactInfo.website}
+                  </a>
+                </div>
+              </div>
 
               {/* Social Links */}
               <div className="flex space-x-4">
@@ -258,6 +295,17 @@ const Footer = () => {
                   <h4 className="font-semibold text-primary-400">{office.city}</h4>
                   <p className="text-gray-300 text-sm">{office.address}</p>
                   <p className="text-gray-400 text-sm">{office.details}</p>
+                  {office.mapUrl && (
+                    <a 
+                      href={office.mapUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary-400 hover:text-primary-300 text-sm transition-colors inline-flex items-center mt-2"
+                    >
+                      <Icon name="map" size="sm" className="mr-1" />
+                      View on Google Maps
+                    </a>
+                  )}
                 </motion.div>
               ))}
             </div>
@@ -275,7 +323,7 @@ const Footer = () => {
         >
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
             <div className="text-gray-400 text-sm">
-              © {currentYear} Mastersolis Infotech. All rights reserved.
+              © {currentYear} FWC IT SERVICES PRIVATE LIMITED. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Crafted with AI.</span>

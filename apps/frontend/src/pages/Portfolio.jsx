@@ -8,7 +8,7 @@ import { staggerContainer, itemFadeIn } from '../components/motionVariants'
 import Icon from '../components/UI/Icon'
 
 /**
- * Portfolio Page - Mastersolis Infotech Design System
+ * Portfolio Page - FWC Infotech Design System
  * Professional portfolio section with tag-based filtering
  */
 const Portfolio = () => {

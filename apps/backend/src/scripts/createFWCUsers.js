@@ -178,35 +178,35 @@ const main = async () => {
   try {
     await connectDB();
     
-    console.log('\n🔧 Creating/Updating Mastersolis Users...\n');
+    console.log('\n🔧 Creating/Updating FWC Users...\n');
     
     // Create/Update Users
-    await createOrUpdateUser('admin@mastersolisinfotech.com', 'admin123', 'ADMIN', {
+    await createOrUpdateUser('admin@FWCinfotech.com', 'admin123', 'ADMIN', {
       username: 'admin',
       firstName: 'Admin',
       lastName: 'User'
     });
     
-    await createOrUpdateUser('hr@mastersolisinfotech.com', 'HR@2024!', 'HR', {
+    await createOrUpdateUser('hr@FWCinfotech.com', 'HR@2024!', 'HR', {
       username: 'hr',
       firstName: 'HR',
       lastName: 'Manager'
     });
     
-    await createOrUpdateUser('manager@mastersolisinfotech.com', 'manager123', 'MANAGER', {
+    await createOrUpdateUser('manager@FWCinfotech.com', 'manager123', 'MANAGER', {
       username: 'manager',
       firstName: 'Manager',
       lastName: 'User'
     });
     
-    await createOrUpdateUser('employee@mastersolisinfotech.com', 'employee123', 'EMPLOYEE', {
+    await createOrUpdateUser('employee@FWCinfotech.com', 'employee123', 'EMPLOYEE', {
       username: 'employee',
       firstName: 'Employee',
       lastName: 'User'
     });
     
     // Create/Update Candidate
-    await createOrUpdateCandidate('candidate.demo@mastersolisinfotech.com', 'candidate123', {
+    await createOrUpdateCandidate('candidate.demo@FWCinfotech.com', 'candidate123', {
       firstName: 'Demo',
       lastName: 'Candidate',
       name: 'Demo Candidate'
@@ -215,11 +215,11 @@ const main = async () => {
     console.log('\n🔍 Verifying Logins...\n');
     
     // Verify all logins
-    await verifyLogin('admin@mastersolisinfotech.com', 'admin123');
-    await verifyLogin('hr@mastersolisinfotech.com', 'HR@2024!');
-    await verifyLogin('manager@mastersolisinfotech.com', 'manager123');
-    await verifyLogin('employee@mastersolisinfotech.com', 'employee123');
-    await verifyLogin('candidate.demo@mastersolisinfotech.com', 'candidate123', true);
+    await verifyLogin('admin@FWCinfotech.com', 'admin123');
+    await verifyLogin('hr@FWCinfotech.com', 'HR@2024!');
+    await verifyLogin('manager@FWCinfotech.com', 'manager123');
+    await verifyLogin('employee@FWCinfotech.com', 'employee123');
+    await verifyLogin('candidate.demo@FWCinfotech.com', 'candidate123', true);
     
     console.log('\n✅ All users created/updated and verified!\n');
     

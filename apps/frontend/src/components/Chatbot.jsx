@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import api from '../services/api';
 import Icon from './UI/Icon';
 
 const Chatbot = () => {
@@ -9,7 +9,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hello! 👋 I'm your AI assistant for Mastersolis Infotech. I'm here to help you learn about our enterprise HRMS solutions, assist with job applications, answer your questions, and guide you through our services. How can I assist you today?",
+      content: "Hello! 👋 I'm your AI assistant for FWC Infotech. I'm here to help you learn about our enterprise HRMS solutions, assist with job applications, answer your questions, and guide you through our services. How can I assist you today?",
       timestamp: new Date()
     }
   ]);
@@ -95,7 +95,7 @@ const Chatbot = () => {
     setSuggestedQuestions([]);
 
     try {
-      const response = await axios.post('/api/chatbot/chat', {
+      const response = await api.post('/chatbot/chat', {
         message: currentInput,
         sessionId
       });
@@ -124,7 +124,7 @@ const Chatbot = () => {
       console.error('Chat error:', error);
       const errorMessage = {
         role: 'assistant',
-        content: error.response?.data?.response || "I'm sorry, I encountered a technical issue. Please try again in a moment, or feel free to contact our support team directly at info@mastersolisinfotech.com",
+        content: error.response?.data?.response || "I'm sorry, I encountered a technical issue. Please try again in a moment, or feel free to contact our support team directly at support@fwc.co.in",
         timestamp: new Date(),
         error: true
       };
@@ -158,7 +158,7 @@ const Chatbot = () => {
     setTypingIndicator(true);
 
     try {
-      const response = await axios.post('/api/chatbot/resume/upload', formData, {
+      const response = await api.post('/chatbot/resume/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -195,7 +195,7 @@ const Chatbot = () => {
     setMessages([
       {
         role: 'assistant',
-        content: "Hello! 👋 I'm your AI assistant for Mastersolis Infotech. I'm here to help you learn about our enterprise HRMS solutions, assist with job applications, answer your questions, and guide you through our services. How can I assist you today?",
+        content: "Hello! 👋 I'm your AI assistant for FWC Infotech. I'm here to help you learn about our enterprise HRMS solutions, assist with job applications, answer your questions, and guide you through our services. How can I assist you today?",
         timestamp: new Date()
       }
     ]);
@@ -296,7 +296,7 @@ const Chatbot = () => {
                   <Icon name="chat" size="lg" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">Mastersolis Assistant</h3>
+                  <h3 className="font-bold text-lg">FWC Assistant</h3>
                   <p className="text-xs text-blue-100 flex items-center gap-1">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                     AI-Powered Support

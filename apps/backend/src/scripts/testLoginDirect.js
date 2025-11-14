@@ -26,11 +26,11 @@ const main = async () => {
   console.log('⚠️  Make sure backend server is running on port 3001!\n');
   
   // Test all logins
-  await testLogin('admin@mastersolisinfotech.com', 'admin123');
-  await testLogin('hr@mastersolisinfotech.com', 'HR@2024!');
-  await testLogin('manager@mastersolisinfotech.com', 'manager123');
-  await testLogin('employee@mastersolisinfotech.com', 'employee123');
-  await testLogin('candidate.demo@mastersolisinfotech.com', 'candidate123', true);
+  await testLogin('admin@FWCinfotech.com', 'admin123');
+  await testLogin('hr@FWCinfotech.com', 'HR@2024!');
+  await testLogin('manager@FWCinfotech.com', 'manager123');
+  await testLogin('employee@FWCinfotech.com', 'employee123');
+  await testLogin('candidate.demo@FWCinfotech.com', 'candidate123', true);
   
   console.log('\n✅ All login tests completed!');
 };

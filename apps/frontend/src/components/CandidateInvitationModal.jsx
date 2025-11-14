@@ -33,14 +33,25 @@ const CandidateInvitationModal = ({ isOpen, onClose, onSuccess }) => {
       const response = await api.post('/candidates/invite', formData)
       
       if (response.data.success) {
-        onSuccess(response.data.data)
-        setFormData({ email: '', candidateName: '', invitedBy: '' })
-        onClose()
+        // Show success message
+        if (response.data.data?.emailSent) {
+          onSuccess(response.data.data)
+          setFormData({ email: '', candidateName: '', invitedBy: '' })
+          onClose()
+        } else {
+          // Email failed but invitation was created
+          setError(response.data.message || 'Invitation created but email failed to send. Please check email configuration.')
+        }
       } else {
-        setError(response.data.message)
+        setError(response.data.message || response.data.error || 'Failed to send invitation')
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to send invitation')
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Failed to send invitation'
+      setError(errorMessage)
+      console.error('Invitation error:', error)
     } finally {
       setLoading(false)
     }

@@ -1,4 +1,4 @@
-# Mastersolis Infotech - Enterprise-Grade Human Resource Management System
+# FWC Infotech - Enterprise-Grade Human Resource Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -37,7 +37,7 @@ A comprehensive, production-ready Human Resource Management System built with mo
 
 ### Recruitment Management Interface
 
-The Mastersolis Infotech HRMS provides an intuitive and modern interface for managing recruitment processes. Below are screenshots showcasing the key features:
+The FWC Infotech HRMS provides an intuitive and modern interface for managing recruitment processes. Below are screenshots showcasing the key features:
 
 #### Recruitment Dashboard
 
@@ -238,11 +238,11 @@ Create `.env` files in the following locations:
 ```env
 # Application
 NODE_ENV=development
-APP_NAME=Mastersolis Infotech HRMS
+APP_NAME=FWC Infotech HRMS
 APP_VERSION=1.0.0
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/mastersolis-hrms
+MONGODB_URI=mongodb://localhost:27017/FWC-hrms
 REDIS_URL=redis://localhost:6379
 
 # Security
@@ -253,7 +253,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 
 # Email Service
 RESEND_API_KEY=your-resend-api-key
-RESEND_FROM=Mastersolis HRMS <noreply@mastersolis.com>
+RESEND_FROM=FWC HRMS <noreply@FWC.com>
 
 # AI Services
 OPENAI_API_KEY=your-openai-api-key
@@ -276,7 +276,7 @@ PORT=3001
 NODE_ENV=development
 
 # Database
-DATABASE_URL=mongodb://localhost:27017/mastersolis-hrms
+DATABASE_URL=mongodb://localhost:27017/FWC-hrms
 
 # Security
 JWT_SECRET=your-super-secret-jwt-key-here
@@ -292,14 +292,14 @@ REDIS_URL=redis://localhost:6379
 
 # Email
 RESEND_API_KEY=your-resend-api-key
-RESEND_FROM=Mastersolis HRMS <noreply@mastersolis.com>
+RESEND_FROM=FWC HRMS <noreply@FWC.com>
 ```
 
 #### Frontend `.env` (apps/frontend/.env)
 
 ```env
 VITE_API_URL=http://localhost:3001/api
-VITE_APP_NAME=Mastersolis Infotech HRMS
+VITE_APP_NAME=FWC Infotech HRMS
 VITE_APP_VERSION=1.0.0
 VITE_SOCKET_URL=http://localhost:3001
 ```
@@ -696,7 +696,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Issues**: Open an issue on [GitHub](https://github.com/PriyankaGowda2005/CICADA-HACK/issues) for bugs or feature requests
 - **Discussions**: Use [GitHub Discussions](https://github.com/PriyankaGowda2005/CICADA-HACK/discussions) for questions and ideas
 - **Repository**: [https://github.com/PriyankaGowda2005/CICADA-HACK](https://github.com/PriyankaGowda2005/CICADA-HACK)
-- **Email**: Contact the development team at support@mastersolis.com
+- **Email**: Contact the development team at support@FWC.com
 
 ### Common Issues
 
@@ -704,7 +704,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ```bash
 # Check MongoDB connection
-mongosh "mongodb://localhost:27017/mastersolis-hrms"
+mongosh "mongodb://localhost:27017/FWC-hrms"
 
 # Check Redis connection
 redis-cli ping
@@ -749,8 +749,8 @@ npm run build
 
 ---
 
-**Built with ❤️ by the Mastersolis Infotech Development Team**
+**Built with ❤️ by the FWC Infotech Development Team**
 
 🔗 **GitHub Repository**: [https://github.com/PriyankaGowda2005/CICADA-HACK](https://github.com/PriyankaGowda2005/CICADA-HACK)
 
-For more information, visit our [website](https://mastersolis.com) or contact us at [info@mastersolis.com](mailto:info@mastersolis.com).
+For more information, visit our [website](https://FWC.com) or contact us at [info@FWC.com](mailto:info@FWC.com).

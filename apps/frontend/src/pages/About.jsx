@@ -25,7 +25,7 @@ const About = () => {
   ]
 
   const milestones = [
-    { year: '2020', event: 'Mastersolis Infotech founded with vision to simplify HR management' },
+    { year: '2020', event: 'FWC Infotech founded with vision to simplify HR management' },
     { year: '2021', event: 'Launched MVP with core employee management features' },
     { year: '2022', event: 'Reached 1,000+ active users across 50+ companies' },
     { year: '2023', event: 'Introduced AI-powered features and advanced analytics' },
@@ -47,7 +47,7 @@ const About = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">Mastersolis Infotech</h1>
+                <h1 className="text-2xl font-bold text-gray-900">FWC Infotech</h1>
                 <p className="text-sm text-gray-500">AI-Driven Digital Solutions</p>
               </div>
             </div>
@@ -61,10 +61,10 @@ const About = () => {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              About Mastersolis Infotech
+              About FWC Infotech
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Mastersolis Infotech automates digital presence — building smart websites, recruitment tools, and AI dashboards.
+              FWC Infotech automates digital presence — building smart websites, recruitment tools, and AI dashboards.
             </p>
           </div>
 
@@ -190,7 +190,7 @@ const About = () => {
                 Join Our Mission
               </h2>
               <p className="text-blue-100 mb-6">
-                Be part of the future of AI-driven digital solutions. Experience the difference with Mastersolis Infotech.
+                Be part of the future of AI-driven digital solutions. Experience the difference with FWC Infotech.
               </p>
               <button className="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
                 Get Started Today

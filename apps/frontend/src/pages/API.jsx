@@ -160,14 +160,14 @@ Content-Type: application/json
     {
       language: 'JavaScript',
       code: `// Install the SDK
-npm install @mastersolis/sdk
+npm install @FWC/sdk
 
 // Initialize the client
-import { MastersolisClient } from '@mastersolis/sdk';
+import { FWCClient } from '@FWC/sdk';
 
-const client = new MastersolisClient({
+const client = new FWCClient({
   apiKey: 'your_api_key',
-  baseUrl: 'https://api.mastersolis.com'
+  baseUrl: 'https://api.FWC.com'
 });
 
 // Get employees
@@ -186,14 +186,14 @@ const newEmployee = await client.employees.create({
     {
       language: 'Python',
       code: `# Install the SDK
-pip install mastersolis-sdk
+pip install FWC-sdk
 
 # Initialize the client
-from mastersolis import MastersolisClient
+from FWC import FWCClient
 
-client = MastersolisClient(
+client = FWCClient(
     api_key='your_api_key',
-    base_url='https://api.mastersolis.com'
+    base_url='https://api.FWC.com'
 )
 
 # Get employees
@@ -213,14 +213,14 @@ new_employee = client.employees.create({
       language: 'PHP',
       code: `<?php
 // Install via Composer
-composer require mastersolis/php-sdk
+composer require FWC/php-sdk
 
 // Initialize the client
-use Mastersolis\MastersolisClient;
+use FWC\FWCClient;
 
-$client = new MastersolisClient([
+$client = new FWCClient([
     'api_key' => 'your_api_key',
-    'base_url' => 'https://api.mastersolis.com'
+    'base_url' => 'https://api.FWC.com'
 ]);
 
 // Get employees
@@ -252,7 +252,7 @@ $newEmployee = $client->employees()->create([
               API Documentation
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Integrate Mastersolis Infotech with your existing systems using our RESTful API. 
+              Integrate FWC Infotech with your existing systems using our RESTful API. 
               Access all HR data and functionality programmatically.
             </p>
           </div>
@@ -386,7 +386,7 @@ $newEmployee = $client->employees()->create([
                     Ready to Get Started?
                   </h2>
                   <p className="text-blue-100 mb-6">
-                    Get your API key and start integrating Mastersolis Infotech with your applications today.
+                    Get your API key and start integrating FWC Infotech with your applications today.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button className="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition-colors duration-200">

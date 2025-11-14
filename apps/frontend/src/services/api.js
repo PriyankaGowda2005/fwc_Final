@@ -757,6 +757,10 @@ export const resumeProcessingAPI = {
     })
   },
 
+  // Get candidate's resume details with ATS scores and analysis
+  getCandidateResume: () => 
+    api.get('/resume-processing/candidate-resume'),
+
   // Calculate ATS score for a resume against a job posting
   calculateAtsScore: (data) => api.post('/resume-processing/ats-score', data),
 
@@ -768,9 +772,15 @@ export const resumeProcessingAPI = {
   downloadTemplate: (resumeId) => 
     api.get(`/resume-processing/download-template/${resumeId}`, { responseType: 'blob' }),
 
-  // Get job recommendations for a candidate
-  getJobRecommendations: (candidateId) => 
-    api.get(`/resume-processing/job-recommendations/${candidateId}`),
+  // Get job recommendations for a candidate (uses candidate auth)
+  getJobRecommendations: (candidateId) => {
+    // If candidateId is provided, use the HR endpoint, otherwise use candidate endpoint
+    if (candidateId) {
+      return api.get(`/resume-processing/job-recommendations/${candidateId}`)
+    } else {
+      return api.get('/resume-processing/my-job-recommendations')
+    }
+  },
 
   // Get dashboard data with filters
   getDashboard: (params = {}) => {

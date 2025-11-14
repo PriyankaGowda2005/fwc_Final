@@ -50,7 +50,7 @@ async function createAllDemoUsers() {
     // Define all demo users matching login page credentials
     const demoUsers = [
       {
-        email: 'admin@mastersolisinfotech.com',
+        email: 'admin@fwcinfotech.com',
         username: 'admin',
         password: 'admin123',
         role: 'ADMIN',
@@ -61,7 +61,7 @@ async function createAllDemoUsers() {
         departmentId: itDept._id
       },
       {
-        email: 'hr@mastersolisinfotech.com',
+        email: 'hr@fwcinfotech.com',
         username: 'hr_manager',
         password: 'HR@2024!',
         role: 'HR',
@@ -72,7 +72,7 @@ async function createAllDemoUsers() {
         departmentId: hrDept._id
       },
       {
-        email: 'manager@mastersolisinfotech.com',
+        email: 'manager@fwcinfotech.com',
         username: 'manager',
         password: 'manager123',
         role: 'MANAGER',
@@ -83,7 +83,7 @@ async function createAllDemoUsers() {
         departmentId: itDept._id
       },
       {
-        email: 'employee@mastersolisinfotech.com',
+        email: 'employee@fwcinfotech.com',
         username: 'employee',
         password: 'employee123',
         role: 'EMPLOYEE',
@@ -94,7 +94,7 @@ async function createAllDemoUsers() {
         departmentId: itDept._id
       },
       {
-        email: 'candidate.demo@mastersolisinfotech.com',
+        email: 'candidate.demo@fwcinfotech.com',
         username: 'candidate_demo',
         password: 'candidate123',
         role: 'CANDIDATE',
@@ -242,11 +242,11 @@ async function createAllDemoUsers() {
     console.log('\n✅ All demo users created/updated successfully!\n');
     console.log('📋 Login Credentials:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('Admin:    admin@mastersolisinfotech.com / admin123');
-    console.log('HR:       hr@mastersolisinfotech.com / HR@2024!');
-    console.log('Manager:  manager@mastersolisinfotech.com / manager123');
-    console.log('Employee: employee@mastersolisinfotech.com / employee123');
-    console.log('Candidate: candidate.demo@mastersolisinfotech.com / candidate123');
+    console.log('Admin:    admin@fwcinfotech.com / admin123');
+    console.log('HR:       hr@fwcinfotech.com / HR@2024!');
+    console.log('Manager:  manager@fwcinfotech.com / manager123');
+    console.log('Employee: employee@fwcinfotech.com / employee123');
+    console.log('Candidate: candidate.demo@fwcinfotech.com / candidate123');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     // Verify all users can be found

@@ -8,7 +8,7 @@ import Icon from '../components/UI/Icon'
 import { staggerContainer, itemFadeIn } from '../components/motionVariants'
 
 /**
- * Who We Are Page - Mastersolis Infotech Design System
+ * Who We Are Page - FWC Infotech Design System
  * Company information, team, mission, and values
  */
 const WhoWeAre = () => {
@@ -313,21 +313,26 @@ const WhoWeAre = () => {
                   <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 hover:bg-white/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 h-full text-center">
                     <div className="space-y-6">
                       <div className="relative">
-                        <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+                        <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 overflow-hidden shadow-xl">
                           <img 
                             src={member.photo}
                             alt={member.name}
                             className="w-full h-full object-cover rounded-full"
+                            loading="lazy"
                             onError={(e) => {
                               e.target.style.display = 'none'
                               e.target.nextSibling.style.display = 'flex'
                             }}
+                            onLoad={(e) => {
+                              e.target.style.opacity = '1'
+                            }}
+                            style={{ opacity: 0, transition: 'opacity 0.3s' }}
                           />
-                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center absolute inset-0" style={{ display: 'none' }}>
                             <span className="text-3xl font-bold text-white">{member.image}</span>
                           </div>
                         </div>
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
                           <div className="w-3 h-3 bg-white rounded-full"></div>
                         </div>
                       </div>

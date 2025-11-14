@@ -1,6 +1,6 @@
 /**
  * Portfolio Projects Data
- * Professional portfolio projects for Mastersolis Infotech
+ * Professional portfolio projects for FWC Infotech
  * Structured for easy integration with filtering capabilities
  */
 

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 import { Dialog } from '@headlessui/react'
 import Button from './UI/Button'
 import Icon from './UI/Icon'
-import Logo from './Logo'
+// import Logo from './Logo' // Using direct image instead
 
 /**
- * NavBar Component - Mastersolis Infotech Design System
+ * NavBar Component - FWC Infotech Design System
  * Simplified navigation with "More" dropdown menu
  */
 const NavBar = () => {
@@ -150,9 +150,23 @@ const NavBar = () => {
       transition={{ type: 'spring', stiffness: 120, damping: 20 }}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Global">
-        {/* Logo Section - Enhanced with Text and Subtitle */}
+        {/* Logo Section - FWC Logo */}
         <div className="flex lg:flex-1">
-          <Logo size="lg" href="/" showText={true} />
+          <Link to="/" className="flex items-center no-underline">
+            <img 
+              src="/logo.png" 
+              alt="FWC Logo" 
+              className="h-8 w-auto object-contain"
+              style={{ 
+                display: 'block',
+                height: '32px',
+                width: 'auto',
+                maxWidth: '120px',
+                filter: 'brightness(0) saturate(100%)',
+                opacity: 1
+              }}
+            />
+          </Link>
         </div>
         
         {/* Mobile Menu Button */}
@@ -311,9 +325,21 @@ const NavBar = () => {
         <div className="fixed inset-0 z-50 bg-black/50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-4 py-6 sm:px-6 sm:max-w-sm shadow-2xl">
           <div className="flex items-center justify-between">
-            <div onClick={() => setMobileMenuOpen(false)}>
-              <Logo size="lg" href="/" />
-            </div>
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center no-underline">
+              <img 
+                src="/logo.png" 
+                alt="FWC Logo" 
+                className="h-10 w-auto object-contain"
+                style={{ 
+                  display: 'block',
+                  height: '40px',
+                  width: 'auto',
+                  maxWidth: '160px',
+                  filter: 'brightness(0) saturate(100%)',
+                  opacity: 1
+                }}
+              />
+            </Link>
             <button
               type="button"
               className="-m-2.5 rounded-xl p-2.5 text-gray-700 hover:bg-gray-100 transition-colors duration-200"

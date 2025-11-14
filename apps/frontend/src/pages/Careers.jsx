@@ -197,7 +197,7 @@ const Careers = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">Mastersolis Infotech</h1>
+                <h1 className="text-2xl font-bold text-gray-900">FWC</h1>
                 <p className="text-sm text-gray-500">AI-Driven Digital Solutions</p>
               </div>
             </div>
@@ -388,8 +388,8 @@ const Careers = () => {
               <p className="text-blue-100 mb-6">
                 We're always looking for talented individuals. Send us your resume and let us know how you can contribute to our mission.
               </p>
-              <a href="mailto:careers@mastersolis.com" className="inline-block bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
-                Email: careers@mastersolis.com
+              <a href="mailto:careers@fwc.com" className="inline-block bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+                Email: careers@fwc.com
               </a>
             </div>
           </div>

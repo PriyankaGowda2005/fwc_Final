@@ -6,28 +6,28 @@ const Press = () => {
   const pressReleases = [
     {
       date: '2024-01-15',
-      title: 'Mastersolis Infotech Launches AI-Powered Recruitment Features',
+      title: 'FWC Infotech Launches AI-Powered Recruitment Features',
       summary: 'New AI capabilities streamline candidate screening and interview processes.',
       category: 'Product Update'
     },
     {
       date: '2023-12-10',
-      title: 'Mastersolis Infotech Reaches 5,000 Active Users Milestone',
+      title: 'FWC Infotech Reaches 5,000 Active Users Milestone',
       summary: 'Company celebrates rapid growth and expanding customer base.',
       category: 'Company News'
     },
     {
       date: '2023-11-20',
-      title: 'Mastersolis Infotech Partners with Leading Payroll Providers',
+      title: 'FWC Infotech Partners with Leading Payroll Providers',
       summary: 'New integrations simplify payroll processing for customers.',
       category: 'Partnership'
     }
   ]
 
   const mediaKit = {
-    logo: 'https://via.placeholder.com/200x100/3B82F6/FFFFFF?text=Mastersolis+Infotech',
+    logo: '/logo.png',
     brandColors: ['#3B82F6', '#8B5CF6', '#10B981'],
-    pressContact: 'press@mastersolisinfotech.com'
+    pressContact: 'hr@fwc.co.in'
   }
 
   return (
@@ -45,7 +45,7 @@ const Press = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">Mastersolis Infotech</h1>
+                <h1 className="text-2xl font-bold text-gray-900">FWC Infotech</h1>
                 <p className="text-sm text-gray-500">Press & Media</p>
               </div>
             </div>
@@ -62,7 +62,7 @@ const Press = () => {
               Press & Media
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay updated with the latest news, press releases, and media resources from Mastersolis Infotech.
+              Stay updated with the latest news, press releases, and media resources from FWC Infotech.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ const Press = () => {
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">Logo</h4>
-                    <img src={mediaKit.logo} alt="Mastersolis Infotech Logo" className="h-16 bg-gray-100 rounded" />
+                    <img src={mediaKit.logo} alt="FWC Infotech Logo" className="h-16 bg-gray-100 rounded" />
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">Brand Colors</h4>
@@ -118,8 +118,10 @@ const Press = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Press Contact</h3>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-gray-700">
+                    <strong>Company:</strong> FWC IT SERVICES PRIVATE LIMITED<br />
                     <strong>Email:</strong> {mediaKit.pressContact}<br />
-                    <strong>Phone:</strong> +1 (555) 123-4567<br />
+                    <strong>Phone:</strong> +91 8026 597 566 (India) | +1 (408) 914-2832 (Global)<br />
+                    <strong>Address:</strong> 4th Floor, 1348, 7th Avenue, Opposite Yes Bank, Jayanagara 9th Block, Jayanagar, Bengaluru, Karnataka 560041, India<br />
                     <strong>Response Time:</strong> Within 24 hours
                   </p>
                 </div>

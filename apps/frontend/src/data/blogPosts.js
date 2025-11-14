@@ -3,17 +3,17 @@ export const blogPosts = [
   {
     id: 1,
     title: 'How AI is Reshaping Software Development in 2025',
-    metaDescription: 'AI-powered tools are transforming the way software is built — from code generation to smart debugging. Here\'s how AI accelerates development at Mastersolis Infotech.',
-    summary: 'AI-assisted coding and automation have revolutionized modern development. Discover how Mastersolis Infotech integrates intelligent systems to make software faster, smarter, and more reliable.',
+    metaDescription: 'AI-powered tools are transforming the way software is built — from code generation to smart debugging. Here\'s how AI accelerates development at FWC Infotech.',
+    summary: 'AI-assisted coding and automation have revolutionized modern development. Discover how FWC Infotech integrates intelligent systems to make software faster, smarter, and more reliable.',
     tags: ['AI', 'Software Development', 'Automation', 'Innovation', 'Productivity'],
     dateOfPost: 'November 7, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'AI',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Artificial Intelligence isn't just a trend anymore — it's the backbone of modern software engineering. At Mastersolis Infotech, we leverage AI to make development faster, cleaner, and more adaptable than ever before.
+Artificial Intelligence isn't just a trend anymore — it's the backbone of modern software engineering. At FWC Infotech, we leverage AI to make development faster, cleaner, and more adaptable than ever before.
 
 1️⃣ AI in Code Generation
 
@@ -21,7 +21,7 @@ AI-assisted tools such as GitHub Copilot and AWS CodeWhisperer are redefining co
 
 2️⃣ Smart Debugging and Error Prediction
 
-Traditional debugging is reactive; AI makes it proactive. Machine learning models predict potential bugs and security vulnerabilities before deployment. Mastersolis Infotech integrates intelligent testing pipelines to ensure stability and reliability.
+Traditional debugging is reactive; AI makes it proactive. Machine learning models predict potential bugs and security vulnerabilities before deployment. FWC Infotech integrates intelligent testing pipelines to ensure stability and reliability.
 
 3️⃣ Continuous Learning Systems
 
@@ -33,24 +33,24 @@ By using AI-driven development environments, productivity increases up to 40%, a
 
 Conclusion
 
-At Mastersolis Infotech, AI isn't replacing developers — it's empowering them. Together, human creativity and machine intelligence are shaping a smarter digital future.
+At FWC Infotech, AI isn't replacing developers — it's empowering them. Together, human creativity and machine intelligence are shaping a smarter digital future.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 2,
     title: 'The Power of Automation in Full-Stack Development',
-    metaDescription: 'Automation bridges efficiency and innovation. See how Mastersolis Infotech accelerates full-stack development with CI/CD, AI tools, and smart workflows.',
-    summary: 'From build pipelines to intelligent deployments, automation is revolutionizing software workflows. Mastersolis Infotech uses automation to build scalable, reliable systems faster than ever.',
+    metaDescription: 'Automation bridges efficiency and innovation. See how FWC Infotech accelerates full-stack development with CI/CD, AI tools, and smart workflows.',
+    summary: 'From build pipelines to intelligent deployments, automation is revolutionizing software workflows. FWC Infotech uses automation to build scalable, reliable systems faster than ever.',
     tags: ['Full Stack', 'Automation', 'CI/CD', 'DevOps', 'AI Tools'],
     dateOfPost: 'November 7, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Automation',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80',
     body: `Introduction
 
-Automation is the silent engineer that never sleeps. It handles repetitive tasks, ensures quality, and lets developers focus on innovation. Mastersolis Infotech integrates automation into every stage of the development cycle.
+Automation is the silent engineer that never sleeps. It handles repetitive tasks, ensures quality, and lets developers focus on innovation. FWC Infotech integrates automation into every stage of the development cycle.
 
 1️⃣ Continuous Integration and Deployment (CI/CD)
 
@@ -70,24 +70,24 @@ Automation extends beyond code — it enables synchronized teamwork. Automated n
 
 Conclusion
 
-Automation doesn't replace effort — it amplifies it. At Mastersolis Infotech, our mission is to build intelligent systems that work for humans, not against them.
+Automation doesn't replace effort — it amplifies it. At FWC Infotech, our mission is to build intelligent systems that work for humans, not against them.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 3,
     title: 'Bringing Human Touch to AI Resume Screening',
-    metaDescription: 'Mastersolis Infotech uses hybrid AI resume screening to speed hiring while preserving human insight — the balance between automation and empathy.',
-    summary: 'AI in recruitment accelerates resume screening but doesn\'t replace human judgment. Mastersolis Infotech blends AI and empathy to make hiring faster and fairer.',
+    metaDescription: 'FWC Infotech uses hybrid AI resume screening to speed hiring while preserving human insight — the balance between automation and empathy.',
+    summary: 'AI in recruitment accelerates resume screening but doesn\'t replace human judgment. FWC Infotech blends AI and empathy to make hiring faster and fairer.',
     tags: ['AI', 'Recruitment', 'HR Tech', 'Resume Screening', 'Automation'],
     dateOfPost: 'November 7, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'AI',
     readTime: '5 min read',
     image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Recruitment is evolving rapidly. With thousands of applicants per role, HR teams rely on AI to pre-screen resumes — but Mastersolis Infotech believes that technology should assist people, not replace them.
+Recruitment is evolving rapidly. With thousands of applicants per role, HR teams rely on AI to pre-screen resumes — but FWC Infotech believes that technology should assist people, not replace them.
 
 1️⃣ What Hybrid AI Resume Screening Means
 
@@ -105,22 +105,22 @@ Conclusion
 
 AI brings speed, humans bring sense. Together, they redefine smart hiring.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 4,
     title: 'Deep Learning for Business Automation: Smarter Decisions, Faster Results',
-    metaDescription: 'Mastersolis Infotech leverages deep learning to automate workflows, predict outcomes, and make business processes faster, smarter, and data-driven.',
-    summary: 'From forecasting to workflow optimization, deep learning is transforming business automation. Mastersolis Infotech builds AI-driven systems that think, learn, and improve with every decision.',
+    metaDescription: 'FWC Infotech leverages deep learning to automate workflows, predict outcomes, and make business processes faster, smarter, and data-driven.',
+    summary: 'From forecasting to workflow optimization, deep learning is transforming business automation. FWC Infotech builds AI-driven systems that think, learn, and improve with every decision.',
     tags: ['Deep Learning', 'Business Automation', 'AI', 'Machine Learning', 'Predictive Analytics'],
     dateOfPost: 'November 7, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Deep Learning',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-The business world no longer runs on instinct alone — it runs on intelligence. Deep learning allows companies to process massive data, predict outcomes, and automate decisions in real time. At Mastersolis Infotech, we harness these capabilities to make organizations future-ready.
+The business world no longer runs on instinct alone — it runs on intelligence. Deep learning allows companies to process massive data, predict outcomes, and automate decisions in real time. At FWC Infotech, we harness these capabilities to make organizations future-ready.
 
 1️⃣ The Role of Deep Learning in Automation
 
@@ -132,7 +132,7 @@ Imagine knowing what your customer wants before they ask. Deep learning models t
 
 3️⃣ Real-Time Workflow Optimization
 
-Through sensor data and logs, AI learns process inefficiencies and automatically suggests improvements — from logistics routes to energy consumption. Mastersolis Infotech implements adaptive systems that learn continuously, reducing costs and delays.
+Through sensor data and logs, AI learns process inefficiencies and automatically suggests improvements — from logistics routes to energy consumption. FWC Infotech implements adaptive systems that learn continuously, reducing costs and delays.
 
 4️⃣ Case Study: Smarter Retail Forecasting
 
@@ -142,22 +142,22 @@ Conclusion
 
 Deep learning isn't just about automation — it's about evolution. Businesses powered by data can think ahead, not just react.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 5,
     title: 'AI in Web Security: Defending Digital Frontiers with Intelligence',
-    metaDescription: 'Mastersolis Infotech combines AI and cybersecurity to detect threats faster, strengthen defenses, and secure digital systems proactively.',
-    summary: 'Cyber threats evolve faster than humans can react. Mastersolis Infotech uses AI-powered anomaly detection and predictive analytics to safeguard applications and infrastructure in real time.',
+    metaDescription: 'FWC Infotech combines AI and cybersecurity to detect threats faster, strengthen defenses, and secure digital systems proactively.',
+    summary: 'Cyber threats evolve faster than humans can react. FWC Infotech uses AI-powered anomaly detection and predictive analytics to safeguard applications and infrastructure in real time.',
     tags: ['AI Security', 'Cybersecurity', 'Automation', 'Web Protection', 'Threat Detection'],
     dateOfPost: 'November 7, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Security',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-In 2025, cybersecurity is no longer optional — it's the backbone of trust. As digital platforms expand, threats become more complex. Mastersolis Infotech employs AI-driven security frameworks that adapt, learn, and neutralize attacks before they cause damage.
+In 2025, cybersecurity is no longer optional — it's the backbone of trust. As digital platforms expand, threats become more complex. FWC Infotech employs AI-driven security frameworks that adapt, learn, and neutralize attacks before they cause damage.
 
 1️⃣ How AI Reinvents Cyber Defense
 
@@ -177,24 +177,24 @@ Phishing remains one of the biggest attack vectors. AI tools analyze communicati
 
 Conclusion
 
-Cybersecurity powered by AI is not just protection — it's prevention. Mastersolis Infotech builds digital confidence by combining automation, analytics, and intelligence.
+Cybersecurity powered by AI is not just protection — it's prevention. FWC Infotech builds digital confidence by combining automation, analytics, and intelligence.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 6,
     title: 'Machine Learning Models for Predictive Analytics in Business',
-    metaDescription: 'Discover how Mastersolis Infotech uses machine learning models to transform raw data into actionable business insights and predictive analytics.',
-    summary: 'Machine learning transforms business intelligence. Learn how Mastersolis Infotech builds predictive models that forecast trends, optimize operations, and drive data-driven decisions.',
+    metaDescription: 'Discover how FWC Infotech uses machine learning models to transform raw data into actionable business insights and predictive analytics.',
+    summary: 'Machine learning transforms business intelligence. Learn how FWC Infotech builds predictive models that forecast trends, optimize operations, and drive data-driven decisions.',
     tags: ['AI', 'Machine Learning', 'Predictive Analytics', 'Business Intelligence', 'Data Science'],
     dateOfPost: 'November 8, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'AI',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Predictive analytics is revolutionizing how businesses make decisions. At Mastersolis Infotech, we leverage advanced machine learning models to turn historical data into future insights, enabling proactive decision-making.
+Predictive analytics is revolutionizing how businesses make decisions. At FWC Infotech, we leverage advanced machine learning models to turn historical data into future insights, enabling proactive decision-making.
 
 1️⃣ Understanding Predictive Analytics
 
@@ -216,22 +216,22 @@ Conclusion
 
 Predictive analytics powered by machine learning isn't just about forecasting — it's about creating competitive advantages through data intelligence.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 7,
     title: 'Natural Language Processing: Transforming Communication with AI',
-    metaDescription: 'Explore how Mastersolis Infotech uses NLP to build intelligent chatbots, sentiment analysis systems, and automated content processing solutions.',
-    summary: 'NLP bridges human language and machine understanding. Discover how Mastersolis Infotech implements natural language processing to automate communication and extract insights from text data.',
+    metaDescription: 'Explore how FWC Infotech uses NLP to build intelligent chatbots, sentiment analysis systems, and automated content processing solutions.',
+    summary: 'NLP bridges human language and machine understanding. Discover how FWC Infotech implements natural language processing to automate communication and extract insights from text data.',
     tags: ['AI', 'NLP', 'Chatbots', 'Sentiment Analysis', 'Text Processing'],
     dateOfPost: 'November 9, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'AI',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Natural Language Processing (NLP) is transforming how businesses interact with customers and process information. At Mastersolis Infotech, we build NLP solutions that understand, interpret, and generate human language.
+Natural Language Processing (NLP) is transforming how businesses interact with customers and process information. At FWC Infotech, we build NLP solutions that understand, interpret, and generate human language.
 
 1️⃣ The Power of NLP in Business
 
@@ -251,24 +251,24 @@ NLP automates document classification, information extraction, and content summa
 
 Conclusion
 
-NLP is making human-computer interaction more natural and efficient. At Mastersolis Infotech, we're building the future of intelligent communication.
+NLP is making human-computer interaction more natural and efficient. At FWC Infotech, we're building the future of intelligent communication.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 8,
     title: 'Automated Testing: Ensuring Quality at Scale',
-    metaDescription: 'Learn how Mastersolis Infotech implements automated testing frameworks to ensure software quality, reduce bugs, and accelerate release cycles.',
-    summary: 'Automated testing is essential for modern software development. Discover how Mastersolis Infotech builds comprehensive test automation that catches bugs early and ensures reliable deployments.',
+    metaDescription: 'Learn how FWC Infotech implements automated testing frameworks to ensure software quality, reduce bugs, and accelerate release cycles.',
+    summary: 'Automated testing is essential for modern software development. Discover how FWC Infotech builds comprehensive test automation that catches bugs early and ensures reliable deployments.',
     tags: ['Automation', 'Testing', 'Quality Assurance', 'CI/CD', 'DevOps'],
     dateOfPost: 'November 10, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Automation',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-In today's fast-paced development environment, manual testing can't keep up. Automated testing ensures quality while maintaining speed. At Mastersolis Infotech, we build comprehensive test automation frameworks that catch issues before they reach production.
+In today's fast-paced development environment, manual testing can't keep up. Automated testing ensures quality while maintaining speed. At FWC Infotech, we build comprehensive test automation frameworks that catch issues before they reach production.
 
 1️⃣ Types of Automated Testing
 
@@ -288,24 +288,24 @@ We use automated visual testing to catch UI regressions. Screenshots are compare
 
 Conclusion
 
-Automated testing isn't optional — it's essential. At Mastersolis Infotech, we ensure every release is thoroughly tested and production-ready.
+Automated testing isn't optional — it's essential. At FWC Infotech, we ensure every release is thoroughly tested and production-ready.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 9,
     title: 'Infrastructure as Code: Automating Cloud Deployments',
-    metaDescription: 'Discover how Mastersolis Infotech uses Infrastructure as Code to automate cloud infrastructure provisioning, ensuring consistency and scalability.',
-    summary: 'Infrastructure as Code revolutionizes cloud management. Learn how Mastersolis Infotech automates infrastructure provisioning, reducing deployment time from days to minutes.',
+    metaDescription: 'Discover how FWC Infotech uses Infrastructure as Code to automate cloud infrastructure provisioning, ensuring consistency and scalability.',
+    summary: 'Infrastructure as Code revolutionizes cloud management. Learn how FWC Infotech automates infrastructure provisioning, reducing deployment time from days to minutes.',
     tags: ['Automation', 'Cloud', 'DevOps', 'Infrastructure', 'AWS'],
     dateOfPost: 'November 11, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Automation',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Infrastructure as Code (IaC) treats infrastructure like software — version-controlled, tested, and automated. At Mastersolis Infotech, we use IaC to provision and manage cloud infrastructure with precision and speed.
+Infrastructure as Code (IaC) treats infrastructure like software — version-controlled, tested, and automated. At FWC Infotech, we use IaC to provision and manage cloud infrastructure with precision and speed.
 
 1️⃣ What is Infrastructure as Code?
 
@@ -325,18 +325,18 @@ IaC enables security policies as code. We embed security best practices directly
 
 Conclusion
 
-Infrastructure as Code is the foundation of modern cloud operations. At Mastersolis Infotech, we're building infrastructure that's as agile as the applications it hosts.
+Infrastructure as Code is the foundation of modern cloud operations. At FWC Infotech, we're building infrastructure that's as agile as the applications it hosts.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 10,
     title: 'Neural Networks: The Brain Behind Modern AI',
-    metaDescription: 'Explore how Mastersolis Infotech leverages neural networks to build intelligent systems that learn, adapt, and solve complex problems.',
-    summary: 'Neural networks mimic the human brain to solve complex problems. Discover how Mastersolis Infotech designs and deploys neural network architectures for real-world applications.',
+    metaDescription: 'Explore how FWC Infotech leverages neural networks to build intelligent systems that learn, adapt, and solve complex problems.',
+    summary: 'Neural networks mimic the human brain to solve complex problems. Discover how FWC Infotech designs and deploys neural network architectures for real-world applications.',
     tags: ['Deep Learning', 'Neural Networks', 'AI', 'Machine Learning', 'Computer Vision'],
     dateOfPost: 'November 12, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Deep Learning',
     readTime: '9 min read',
     image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
@@ -362,24 +362,24 @@ Our neural networks power image recognition systems, language translation servic
 
 Conclusion
 
-Neural networks are unlocking capabilities that seemed impossible just years ago. At Mastersolis Infotech, we're pushing the boundaries of what AI can achieve.
+Neural networks are unlocking capabilities that seemed impossible just years ago. At FWC Infotech, we're pushing the boundaries of what AI can achieve.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 11,
     title: 'Computer Vision: Teaching Machines to See',
-    metaDescription: 'Learn how Mastersolis Infotech implements computer vision solutions for object detection, image classification, and visual analytics.',
-    summary: 'Computer vision enables machines to interpret and understand visual information. Discover how Mastersolis Infotech builds vision systems that analyze images and videos with human-like accuracy.',
+    metaDescription: 'Learn how FWC Infotech implements computer vision solutions for object detection, image classification, and visual analytics.',
+    summary: 'Computer vision enables machines to interpret and understand visual information. Discover how FWC Infotech builds vision systems that analyze images and videos with human-like accuracy.',
     tags: ['Deep Learning', 'Computer Vision', 'Image Processing', 'AI', 'Object Detection'],
     dateOfPost: 'November 13, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Deep Learning',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Computer vision is transforming industries by enabling machines to see and understand visual information. At Mastersolis Infotech, we build vision systems that analyze images and videos with remarkable accuracy.
+Computer vision is transforming industries by enabling machines to see and understand visual information. At FWC Infotech, we build vision systems that analyze images and videos with remarkable accuracy.
 
 1️⃣ Understanding Computer Vision
 
@@ -399,24 +399,24 @@ Our vision systems process images and video streams in real-time, making instant
 
 Conclusion
 
-Computer vision is making machines see the world as we do. At Mastersolis Infotech, we're building vision systems that transform how businesses interact with visual data.
+Computer vision is making machines see the world as we do. At FWC Infotech, we're building vision systems that transform how businesses interact with visual data.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 12,
     title: 'Zero-Trust Security Architecture: Protecting Modern Applications',
-    metaDescription: 'Discover how Mastersolis Infotech implements zero-trust security models to protect applications and data in an era of sophisticated cyber threats.',
-    summary: 'Zero-trust security assumes no implicit trust. Learn how Mastersolis Infotech builds security architectures that verify every access request, regardless of location or user.',
+    metaDescription: 'Discover how FWC Infotech implements zero-trust security models to protect applications and data in an era of sophisticated cyber threats.',
+    summary: 'Zero-trust security assumes no implicit trust. Learn how FWC Infotech builds security architectures that verify every access request, regardless of location or user.',
     tags: ['Security', 'Zero Trust', 'Cybersecurity', 'Network Security', 'Access Control'],
     dateOfPost: 'November 14, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Security',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Traditional security models assume trust within network boundaries. Zero-trust architecture eliminates this assumption, verifying every access request regardless of location. At Mastersolis Infotech, we implement zero-trust principles to protect modern applications.
+Traditional security models assume trust within network boundaries. Zero-trust architecture eliminates this assumption, verifying every access request regardless of location. At FWC Infotech, we implement zero-trust principles to protect modern applications.
 
 1️⃣ Principles of Zero-Trust
 
@@ -436,24 +436,24 @@ Cloud-native applications benefit significantly from zero-trust. We implement se
 
 Conclusion
 
-Zero-trust isn't just a security model — it's a mindset. At Mastersolis Infotech, we're building applications that are secure by design.
+Zero-trust isn't just a security model — it's a mindset. At FWC Infotech, we're building applications that are secure by design.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 13,
     title: 'API Security: Protecting Your Digital Gateway',
-    metaDescription: 'Learn how Mastersolis Infotech secures APIs against common vulnerabilities, ensuring safe data exchange between applications and services.',
-    summary: 'APIs are the backbone of modern applications, but they are also prime targets for attacks. Discover how Mastersolis Infotech implements comprehensive API security strategies.',
+    metaDescription: 'Learn how FWC Infotech secures APIs against common vulnerabilities, ensuring safe data exchange between applications and services.',
+    summary: 'APIs are the backbone of modern applications, but they are also prime targets for attacks. Discover how FWC Infotech implements comprehensive API security strategies.',
     tags: ['Security', 'API Security', 'Web Security', 'Authentication', 'OAuth'],
     dateOfPost: 'November 15, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Security',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1563986768609-322da13575ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-APIs enable modern applications to communicate, but they also expose attack surfaces. At Mastersolis Infotech, we implement comprehensive API security to protect data and ensure safe integrations.
+APIs enable modern applications to communicate, but they also expose attack surfaces. At FWC Infotech, we implement comprehensive API security to protect data and ensure safe integrations.
 
 Common API Vulnerabilities
 
@@ -473,24 +473,24 @@ Our API gateways provide centralized security: request validation, SSL terminati
 
 Conclusion
 
-API security is critical in our interconnected digital world. At Mastersolis Infotech, we build APIs that are both powerful and secure.
+API security is critical in our interconnected digital world. At FWC Infotech, we build APIs that are both powerful and secure.
 
-Learn more at Mastersolis Infotech.`
+Learn more at FWC Infotech.`
   },
   {
     id: 14,
     title: 'AI-Powered Candidate Matching: Revolutionizing Talent Acquisition',
-    metaDescription: 'Discover how Mastersolis Infotech uses AI to match candidates with job opportunities, improving hiring efficiency and candidate experience.',
-    summary: 'AI transforms talent acquisition by matching candidates with the right opportunities. Learn how Mastersolis Infotech builds intelligent matching systems that connect talent with employers.',
+    metaDescription: 'Discover how FWC Infotech uses AI to match candidates with job opportunities, improving hiring efficiency and candidate experience.',
+    summary: 'AI transforms talent acquisition by matching candidates with the right opportunities. Learn how FWC Infotech builds intelligent matching systems that connect talent with employers.',
     tags: ['Recruitment', 'AI', 'Talent Acquisition', 'Matching', 'HR Tech'],
     dateOfPost: 'November 16, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Recruitment',
     readTime: '6 min read',
     image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Finding the right candidate for the right role is challenging. AI-powered matching systems analyze candidate profiles and job requirements to identify the best fits. At Mastersolis Infotech, we build matching algorithms that improve hiring outcomes.
+Finding the right candidate for the right role is challenging. AI-powered matching systems analyze candidate profiles and job requirements to identify the best fits. At FWC Infotech, we build matching algorithms that improve hiring outcomes.
 
 1️⃣ How AI Matching Works
 
@@ -510,24 +510,24 @@ Companies using our matching system report 45% faster time-to-hire and 30% bette
 
 Conclusion
 
-AI-powered matching is making hiring more efficient and effective. At Mastersolis Infotech, we're connecting talent with opportunity through intelligent technology.
+AI-powered matching is making hiring more efficient and effective. At FWC Infotech, we're connecting talent with opportunity through intelligent technology.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 15,
     title: 'Video Interview Analysis: AI-Driven Candidate Assessment',
-    metaDescription: 'Explore how Mastersolis Infotech uses AI to analyze video interviews, providing insights into candidate communication skills, personality, and cultural fit.',
-    summary: 'Video interviews generate rich data. Learn how Mastersolis Infotech uses AI to analyze video interviews, extracting insights that help recruiters make better hiring decisions.',
+    metaDescription: 'Explore how FWC Infotech uses AI to analyze video interviews, providing insights into candidate communication skills, personality, and cultural fit.',
+    summary: 'Video interviews generate rich data. Learn how FWC Infotech uses AI to analyze video interviews, extracting insights that help recruiters make better hiring decisions.',
     tags: ['Recruitment', 'AI', 'Video Analysis', 'Interview', 'Assessment'],
     dateOfPost: 'November 17, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Recruitment',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Video interviews provide more data than traditional assessments. At Mastersolis Infotech, we use AI to analyze video interviews, extracting insights about communication skills, confidence, and cultural alignment.
+Video interviews provide more data than traditional assessments. At FWC Infotech, we use AI to analyze video interviews, extracting insights about communication skills, confidence, and cultural alignment.
 
 1️⃣ What We Analyze
 
@@ -547,24 +547,24 @@ We ensure our analysis focuses on job-relevant traits and provides transparent f
 
 Conclusion
 
-AI-powered video analysis is enhancing recruitment by providing deeper insights into candidates. At Mastersolis Infotech, we're making interviews more informative and fair.
+AI-powered video analysis is enhancing recruitment by providing deeper insights into candidates. At FWC Infotech, we're making interviews more informative and fair.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   },
   {
     id: 16,
     title: 'Diversity and Inclusion in AI Recruitment Tools',
-    metaDescription: 'Learn how Mastersolis Infotech builds AI recruitment tools that promote diversity and inclusion while maintaining hiring efficiency.',
-    summary: 'AI recruitment tools must promote diversity, not perpetuate bias. Discover how Mastersolis Infotech designs inclusive AI systems that help build diverse, high-performing teams.',
+    metaDescription: 'Learn how FWC Infotech builds AI recruitment tools that promote diversity and inclusion while maintaining hiring efficiency.',
+    summary: 'AI recruitment tools must promote diversity, not perpetuate bias. Discover how FWC Infotech designs inclusive AI systems that help build diverse, high-performing teams.',
     tags: ['Recruitment', 'AI', 'Diversity', 'Inclusion', 'Ethics'],
     dateOfPost: 'November 18, 2025',
-    postedBy: 'Mastersolis Content Team',
+    postedBy: 'FWC Content Team',
     category: 'Recruitment',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
     body: `Introduction
 
-Diversity drives innovation and performance. At Mastersolis Infotech, we're committed to building AI recruitment tools that promote diversity and inclusion, helping organizations build teams that reflect the world we serve.
+Diversity drives innovation and performance. At FWC Infotech, we're committed to building AI recruitment tools that promote diversity and inclusion, helping organizations build teams that reflect the world we serve.
 
 1️⃣ Identifying and Removing Bias
 
@@ -584,9 +584,9 @@ Beyond hiring, we help organizations create inclusive onboarding and development
 
 Conclusion
 
-Diversity and inclusion aren't just ethical imperatives — they're business advantages. At Mastersolis Infotech, we're building technology that helps create more inclusive workplaces.
+Diversity and inclusion aren't just ethical imperatives — they're business advantages. At FWC Infotech, we're building technology that helps create more inclusive workplaces.
 
-→ Learn more at Mastersolis Infotech.`
+→ Learn more at FWC Infotech.`
   }
 ]
 

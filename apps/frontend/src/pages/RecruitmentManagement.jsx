@@ -10,6 +10,7 @@ import ResumeScreeningModal from '../components/ResumeScreeningModal'
 import ResumeScreeningResultsModal from '../components/ResumeScreeningResultsModal'
 import JobAttachmentModal from '../components/JobAttachmentModal'
 import JobAttachmentsTab from '../components/JobAttachmentsTab'
+import AllAttachmentsTab from '../components/AllAttachmentsTab'
 import InterviewSchedulingModal from '../components/InterviewSchedulingModal'
 import InterviewManagement from '../components/InterviewManagement'
 import { 
@@ -635,19 +636,11 @@ const RecruitmentManagement = () => {
               </div>
             </div>
 
-            {activeTab === 'job-attachments' && selectedJob && (
-              <JobAttachmentsTab 
-                jobPosting={selectedJob} 
+            {activeTab === 'job-attachments' && (
+              <AllAttachmentsTab 
+                jobPostings={jobPostings}
                 onScheduleInterview={handleScheduleInterview}
               />
-            )}
-
-            {activeTab === 'job-attachments' && !selectedJob && (
-              <div className="text-center py-12">
-                <Icon name="document-text" size="lg" className="text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Job Posting</h3>
-                <p className="text-gray-600">Please select a job posting from the Job Postings tab to view attached candidates.</p>
-              </div>
             )}
 
             {activeTab === 'interviews' && (

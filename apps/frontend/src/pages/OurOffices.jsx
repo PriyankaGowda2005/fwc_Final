@@ -11,7 +11,7 @@ const OurOffices = () => {
       address: '123 Business Street, Suite 100',
       cityState: 'New York, NY 10001',
       phone: '+1 (555) 123-4567',
-      email: 'ny@mastersolis.com'
+      email: 'ny@fwc.com'
     },
     {
       city: 'London',
@@ -19,7 +19,7 @@ const OurOffices = () => {
       address: '456 Innovation Avenue',
       cityState: 'London, EC1A 1BB',
       phone: '+44 20 1234 5678',
-      email: 'london@mastersolis.com'
+      email: 'london@fwc.com'
     },
     {
       city: 'Singapore',
@@ -27,7 +27,7 @@ const OurOffices = () => {
       address: '789 Tech Hub, Level 15',
       cityState: 'Singapore 018956',
       phone: '+65 6123 4567',
-      email: 'singapore@mastersolis.com'
+      email: 'singapore@fwc.com'
     },
     {
       city: 'Bangalore',
@@ -35,7 +35,7 @@ const OurOffices = () => {
       address: '321 Digital Park, Tower A',
       cityState: 'Bangalore, Karnataka 560001',
       phone: '+91 80 1234 5678',
-      email: 'bangalore@mastersolis.com'
+      email: 'bangalore@fwc.com'
     }
   ]
 

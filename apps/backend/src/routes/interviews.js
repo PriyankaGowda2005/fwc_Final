@@ -138,23 +138,71 @@ router.post('/schedule', verifyToken, async (req, res) => {
       }
     );
 
-    // Send email notification to candidate
-    if (emailQueue) {
-      await emailQueue.add('send-email', {
-        type: 'interview_scheduled',
-        to: candidate.email,
-        data: {
-          candidateName: candidate.name,
-          jobTitle: jobPosting.title,
-          scheduledAt: interview.scheduledAt,
-          type: interviewType,
-          location: location,
-          meetingLink: meetingLink,
-          duration: duration,
-          interviewers: interviewers,
-          scheduledByName: req.user.name
-        }
-      });
+    // Send email notification to candidate (always send)
+    try {
+      const { generateInterviewInvitationEmail, emailToHTML } = require('./careerApplications');
+      const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
+      const { Resend } = require('resend');
+      const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+      
+      if (resend) {
+        const candidateName = candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim() || 'Candidate';
+        const interviewLink = meetingLink || `https://${process.env.COMPANY_DOMAIN || 'company.com'}/interviews/${interviewResult.insertedId}`;
+        
+        const emailData = generateInterviewInvitationEmail(
+          companyName,
+          jobPosting.title,
+          candidateName,
+          interviewLink,
+          new Date(interview.scheduledAt).toLocaleDateString(),
+          new Date(interview.scheduledAt).toLocaleTimeString()
+        );
+        
+        const htmlBody = emailToHTML(emailData.body, companyName);
+        
+        await resend.emails.send({
+          from: process.env.RESEND_FROM || 'Careers <onboarding@resend.dev>',
+          to: [candidate.email],
+          subject: emailData.subject,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+                <h1 style="color: #2563eb; margin: 0; font-size: 28px;">${companyName}</h1>
+              </div>
+              ${htmlBody}
+              <div style="margin-top: 20px; padding: 15px; background-color: #f3f4f6; border-radius: 8px;">
+                <p style="margin: 0; font-size: 14px; color: #374151;"><strong>Interview Details:</strong></p>
+                <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Type: ${interviewType}</p>
+                ${location ? `<p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Location: ${location}</p>` : ''}
+                <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Duration: ${duration} minutes</p>
+                ${interviewNotes ? `<p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Notes: ${interviewNotes}</p>` : ''}
+              </div>
+            </div>
+          `
+        });
+        
+        console.log('✅ Interview invitation email sent to:', candidate.email);
+      } else if (emailQueue) {
+        // Fallback to email queue if Resend is not available
+        await emailQueue.add('send-email', {
+          type: 'interview_scheduled',
+          to: candidate.email,
+          data: {
+            candidateName: candidate.name,
+            jobTitle: jobPosting.title,
+            scheduledAt: interview.scheduledAt,
+            type: interviewType,
+            location: location,
+            meetingLink: meetingLink,
+            duration: duration,
+            interviewers: interviewers,
+            scheduledByName: req.user.name
+          }
+        });
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send interview invitation email:', emailError);
+      // Don't fail the interview scheduling if email fails
     }
 
     res.json({
@@ -336,11 +384,12 @@ router.post('/schedule-ai', verifyToken, async (req, res) => {
       }
     );
 
-    // Send automated invitation email if requested
-    if (autoInvite) {
+    // Send automated invitation email (default to true if not specified)
+    const shouldSendEmail = autoInvite !== false; // Default to true
+    if (shouldSendEmail) {
       try {
         const { generateInterviewInvitationEmail, emailToHTML } = require('./careerApplications');
-        const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+        const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
         const { Resend } = require('resend');
         const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
         
@@ -472,7 +521,7 @@ router.post('/auto-invite-shortlisted', verifyToken, async (req, res) => {
         // Send invitation email
         try {
           const { generateInterviewInvitationEmail, emailToHTML } = require('./careerApplications');
-          const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+          const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
           const { Resend } = require('resend');
           const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
           
@@ -709,17 +758,19 @@ router.put('/:interviewId/status', verifyToken, async (req, res) => {
 
     // Update attachment status if interview is completed
     if (status === 'COMPLETED') {
-      await database.updateOne(
-        'job_attachments',
-        { _id: interview.attachmentId },
-        { 
-          $set: { 
-            status: 'INTERVIEWED',
-            statusUpdatedBy: req.user._id,
-            statusUpdatedAt: new Date()
+      if (interview.attachmentId) {
+        await database.updateOne(
+          'job_attachments',
+          { _id: interview.attachmentId },
+          { 
+            $set: { 
+              status: 'INTERVIEWED',
+              statusUpdatedBy: req.user._id,
+              statusUpdatedAt: new Date()
+            }
           }
-        }
-      );
+        );
+      }
 
       // Update candidate application status
       await database.updateOne(
@@ -732,6 +783,82 @@ router.put('/:interviewId/status', verifyToken, async (req, res) => {
           }
         }
       );
+    }
+
+    // Send email notification to candidate about status change
+    try {
+      const candidate = await database.findOne('candidates', { _id: interview.candidateId });
+      const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
+      
+      if (candidate && jobPosting) {
+        const { Resend } = require('resend');
+        const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+        const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
+        
+        if (resend) {
+          const statusMessages = {
+            'COMPLETED': 'Your interview has been completed. We will review your performance and get back to you soon.',
+            'CANCELLED': 'Your interview has been cancelled. We will contact you if we need to reschedule.',
+            'NO_SHOW': 'You were marked as a no-show for this interview. Please contact us if you need to reschedule.',
+            'IN_PROGRESS': 'Your interview is now in progress.'
+          };
+          
+          const statusMessage = statusMessages[status] || `Your interview status has been updated to ${status}.`;
+          
+          await resend.emails.send({
+            from: process.env.RESEND_FROM || 'Careers <onboarding@resend.dev>',
+            to: [candidate.email],
+            subject: `Interview Status Update - ${jobPosting.title}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+                  <h1 style="color: #2563eb; margin: 0; font-size: 28px;">${companyName}</h1>
+                </div>
+                <div style="margin: 20px 0;">
+                  <h2 style="color: #111827; font-size: 20px; margin-bottom: 15px;">Interview Status Update</h2>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    Dear ${candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim() || 'Candidate'},
+                  </p>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    ${statusMessage}
+                  </p>
+                  <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 0; font-size: 14px; color: #374151;"><strong>Interview Details:</strong></p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Position: ${jobPosting.title}</p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Status: ${status}</p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Scheduled: ${new Date(interview.scheduledAt).toLocaleDateString()} at ${new Date(interview.scheduledAt).toLocaleTimeString()}</p>
+                    ${notes ? `<p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Notes: ${notes}</p>` : ''}
+                  </div>
+                  <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+                    If you have any questions, please don't hesitate to contact us.
+                  </p>
+                </div>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
+                  This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
+                </p>
+              </div>
+            `
+          });
+          
+          console.log(`✅ Interview status update email sent to: ${candidate.email}`);
+        } else if (emailQueue) {
+          await emailQueue.add('send-email', {
+            type: 'interview_status_update',
+            to: candidate.email,
+            data: {
+              candidateName: candidate.name,
+              jobTitle: jobPosting.title,
+              status,
+              notes,
+              scheduledAt: interview.scheduledAt
+            }
+          });
+        }
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send interview status update email:', emailError);
+      // Don't fail the status update if email fails
     }
 
     res.json({
@@ -797,24 +924,80 @@ router.put('/:interviewId/reschedule', verifyToken, async (req, res) => {
     );
 
     // Send reschedule notification to candidate
-    const candidate = await database.findOne('candidates', { _id: interview.candidateId });
-    const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
+    try {
+      const candidate = await database.findOne('candidates', { _id: interview.candidateId });
+      const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
 
-    if (emailQueue && candidate) {
-      await emailQueue.add('send-email', {
-        type: 'interview_rescheduled',
-        to: candidate.email,
-        data: {
-          candidateName: candidate.name,
-          jobTitle: jobPosting.title,
-          oldScheduledAt: interview.scheduledAt,
-          newScheduledAt: new Date(scheduledAt),
-          type: interview.interviewType,
-          location: location || interview.location,
-          meetingLink: meetingLink || interview.meetingLink,
-          rescheduledByName: req.user.name
+      if (candidate && jobPosting) {
+        const { Resend } = require('resend');
+        const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+        const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
+        
+        if (resend) {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM || 'Careers <onboarding@resend.dev>',
+            to: [candidate.email],
+            subject: `Interview Rescheduled - ${jobPosting.title}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+                  <h1 style="color: #2563eb; margin: 0; font-size: 28px;">${companyName}</h1>
+                </div>
+                <div style="margin: 20px 0;">
+                  <h2 style="color: #111827; font-size: 20px; margin-bottom: 15px;">Interview Rescheduled</h2>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    Dear ${candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim() || 'Candidate'},
+                  </p>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    Your interview for the position of <strong>${jobPosting.title}</strong> has been rescheduled.
+                  </p>
+                  <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0; font-size: 14px; color: #92400e;"><strong>Previous Time:</strong></p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #78350f;">${new Date(interview.scheduledAt).toLocaleDateString()} at ${new Date(interview.scheduledAt).toLocaleTimeString()}</p>
+                  </div>
+                  <div style="background-color: #d1fae5; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981;">
+                    <p style="margin: 0; font-size: 14px; color: #065f46;"><strong>New Time:</strong></p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #047857;">${new Date(scheduledAt).toLocaleDateString()} at ${new Date(scheduledAt).toLocaleTimeString()}</p>
+                  </div>
+                  <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 0; font-size: 14px; color: #374151;"><strong>Interview Details:</strong></p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Type: ${interview.interviewType}</p>
+                    ${(location || interview.location) ? `<p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Location: ${location || interview.location}</p>` : ''}
+                    ${(meetingLink || interview.meetingLink) ? `<p style="margin: 5px 0; font-size: 14px; color: #6b7280;">Meeting Link: <a href="${meetingLink || interview.meetingLink}" style="color: #2563eb;">${meetingLink || interview.meetingLink}</a></p>` : ''}
+                  </div>
+                  <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+                    If you have any questions or need to request a different time, please contact us.
+                  </p>
+                </div>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
+                  This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
+                </p>
+              </div>
+            `
+          });
+          
+          console.log(`✅ Interview reschedule email sent to: ${candidate.email}`);
+        } else if (emailQueue) {
+          await emailQueue.add('send-email', {
+            type: 'interview_rescheduled',
+            to: candidate.email,
+            data: {
+              candidateName: candidate.name,
+              jobTitle: jobPosting.title,
+              oldScheduledAt: interview.scheduledAt,
+              newScheduledAt: new Date(scheduledAt),
+              type: interview.interviewType,
+              location: location || interview.location,
+              meetingLink: meetingLink || interview.meetingLink,
+              rescheduledByName: req.user.name
+            }
+          });
         }
-      });
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send interview reschedule email:', emailError);
+      // Don't fail the reschedule if email fails
     }
 
     res.json({
@@ -875,35 +1058,88 @@ router.put('/:interviewId/cancel', verifyToken, async (req, res) => {
       }
     );
 
-    // Update attachment status
-    await database.updateOne(
-      'job_attachments',
-      { _id: interview.attachmentId },
-      { 
-        $set: { 
-          status: 'SHORTLISTED',
-          statusUpdatedBy: req.user._id,
-          statusUpdatedAt: new Date()
+    // Update attachment status (only if attachment exists)
+    if (interview.attachmentId) {
+      await database.updateOne(
+        'job_attachments',
+        { _id: interview.attachmentId },
+        { 
+          $set: { 
+            status: 'SHORTLISTED',
+            statusUpdatedBy: req.user._id,
+            statusUpdatedAt: new Date()
+          }
         }
-      }
-    );
+      );
+    }
 
     // Send cancellation notification to candidate
-    const candidate = await database.findOne('candidates', { _id: interview.candidateId });
-    const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
+    try {
+      const candidate = await database.findOne('candidates', { _id: interview.candidateId });
+      const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
 
-    if (emailQueue && candidate) {
-      await emailQueue.add('send-email', {
-        type: 'interview_cancelled',
-        to: candidate.email,
-        data: {
-          candidateName: candidate.name,
-          jobTitle: jobPosting.title,
-          scheduledAt: interview.scheduledAt,
-          reason: reason || 'No reason provided',
-          cancelledByName: req.user.name
+      if (candidate && jobPosting) {
+        const { Resend } = require('resend');
+        const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+        const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
+        
+        if (resend) {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM || 'Careers <onboarding@resend.dev>',
+            to: [candidate.email],
+            subject: `Interview Cancelled - ${jobPosting.title}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+                  <h1 style="color: #2563eb; margin: 0; font-size: 28px;">${companyName}</h1>
+                </div>
+                <div style="margin: 20px 0;">
+                  <h2 style="color: #111827; font-size: 20px; margin-bottom: 15px;">Interview Cancelled</h2>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    Dear ${candidate.name || `${candidate.firstName || ''} ${candidate.lastName || ''}`.trim() || 'Candidate'},
+                  </p>
+                  <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+                    We regret to inform you that your interview for the position of <strong>${jobPosting.title}</strong> has been cancelled.
+                  </p>
+                  <div style="background-color: #fee2e2; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ef4444;">
+                    <p style="margin: 0; font-size: 14px; color: #991b1b;"><strong>Cancelled Interview Details:</strong></p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #7f1d1d;">Position: ${jobPosting.title}</p>
+                    <p style="margin: 5px 0; font-size: 14px; color: #7f1d1d;">Scheduled: ${new Date(interview.scheduledAt).toLocaleDateString()} at ${new Date(interview.scheduledAt).toLocaleTimeString()}</p>
+                    ${reason ? `<p style="margin: 5px 0; font-size: 14px; color: #7f1d1d;">Reason: ${reason}</p>` : ''}
+                  </div>
+                  <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+                    We will contact you if we need to reschedule this interview or if there are other opportunities available.
+                  </p>
+                  <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+                    If you have any questions, please don't hesitate to contact us.
+                  </p>
+                </div>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
+                  This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
+                </p>
+              </div>
+            `
+          });
+          
+          console.log(`✅ Interview cancellation email sent to: ${candidate.email}`);
+        } else if (emailQueue) {
+          await emailQueue.add('send-email', {
+            type: 'interview_cancelled',
+            to: candidate.email,
+            data: {
+              candidateName: candidate.name,
+              jobTitle: jobPosting.title,
+              scheduledAt: interview.scheduledAt,
+              reason: reason || 'No reason provided',
+              cancelledByName: req.user.name
+            }
+          });
         }
-      });
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send interview cancellation email:', emailError);
+      // Don't fail the cancellation if email fails
     }
 
     res.json({

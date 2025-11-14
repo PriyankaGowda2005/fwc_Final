@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCandidateAuth } from '../contexts/CandidateAuthContext'
 import { resumeProcessingAPI } from '../services/api'
+import api from '../services/api'
 import Button from '../components/UI/Button'
 import Icon from '../components/UI/Icon'
 import Card from '../components/UI/Card'
@@ -17,8 +18,11 @@ const CandidateResumeUpload = () => {
   const [validationError, setValidationError] = useState('')
   const [showDetails, setShowDetails] = useState(false)
   const [resumeData, setResumeData] = useState(null)
+  const [atsAnalysis, setAtsAnalysis] = useState(null)
+  const [suggestions, setSuggestions] = useState([])
   const [jobRecommendations, setJobRecommendations] = useState([])
   const [processingStatus, setProcessingStatus] = useState('')
+  const [loadingResumeData, setLoadingResumeData] = useState(false)
   const fileInputRef = useRef(null)
 
   // Fetch resume data and recommendations when candidate has uploaded resume
@@ -31,22 +35,45 @@ const CandidateResumeUpload = () => {
 
   const fetchResumeData = async () => {
     try {
-      // This would need a new endpoint to get resume details
-      // For now, we'll fetch it when showing details
+      setLoadingResumeData(true)
+      const response = await resumeProcessingAPI.getCandidateResume()
+      if (response.data && response.data.success) {
+        setResumeData(response.data.data?.resume || null)
+        setAtsAnalysis(response.data.data?.atsAnalysis || null)
+        setSuggestions(response.data.data?.suggestions || [])
+      } else {
+        // Resume might not be processed yet
+        setResumeData(null)
+        setAtsAnalysis(null)
+        setSuggestions([])
+      }
     } catch (error) {
       console.error('Error fetching resume data:', error)
+      // Only show error if it's not a 404 (resume not found)
+      if (error.response?.status !== 404) {
+        toast.error('Failed to load resume analysis. Please try again.')
+      }
+      setResumeData(null)
+      setAtsAnalysis(null)
+      setSuggestions([])
+    } finally {
+      setLoadingResumeData(false)
     }
   }
 
   const fetchJobRecommendations = async () => {
     try {
-      if (!candidate?._id) return
-      const response = await resumeProcessingAPI.getJobRecommendations(candidate._id)
-      if (response.data.success) {
-        setJobRecommendations(response.data.data.recommendations || [])
+      // Use candidate-specific endpoint (no candidateId needed)
+      const response = await resumeProcessingAPI.getJobRecommendations()
+      if (response.data && response.data.success) {
+        setJobRecommendations(response.data.data?.recommendations || [])
+      } else {
+        setJobRecommendations([])
       }
     } catch (error) {
       console.error('Error fetching job recommendations:', error)
+      // Don't show error toast for recommendations, just set empty array
+      setJobRecommendations([])
     }
   }
 
@@ -135,13 +162,51 @@ const CandidateResumeUpload = () => {
       setUploadStatus('processing')
 
       if (result.success) {
+        // Update candidate context to reflect resume upload
+        // The uploadResume function in context should already update this, but refresh profile to be sure
+        try {
+          const profileResponse = await api.get('/candidates/profile')
+          if (profileResponse.data.success) {
+            // Update local candidate state if needed
+            // The context should handle this, but we ensure UI updates
+          }
+        } catch (error) {
+          console.error('Error refreshing profile:', error)
+        }
+
         // Wait a bit for processing, then check status
         setTimeout(async () => {
           setUploadProgress(100)
           setProcessingStatus('Resume processed successfully!')
           
-          // Fetch job recommendations
-          await fetchJobRecommendations()
+          // Wait a bit for backend processing, then fetch data
+          // Try multiple times with increasing delays in case processing takes longer
+          const fetchWithRetry = async (retries = 3, delay = 3000) => {
+            for (let i = 0; i < retries; i++) {
+              await new Promise(resolve => setTimeout(resolve, delay))
+              try {
+                const response = await resumeProcessingAPI.getCandidateResume()
+                if (response.data && response.data.success && response.data.data?.resume) {
+                  // Resume is ready, fetch both data and recommendations
+                  await fetchResumeData()
+                  await fetchJobRecommendations()
+                  break
+                } else if (i === retries - 1) {
+                  // Last retry, fetch anyway
+                  await fetchResumeData()
+                  await fetchJobRecommendations()
+                }
+              } catch (error) {
+                if (i === retries - 1) {
+                  // Last retry failed, try fetching anyway
+                  console.error('Failed to fetch resume data after retries:', error)
+                  await fetchResumeData()
+                  await fetchJobRecommendations()
+                }
+              }
+            }
+          }
+          fetchWithRetry()
           
           setUploadStatus('success')
           toast.success('Resume uploaded and processed! Skills extracted, ATS scores calculated.')
@@ -283,73 +348,202 @@ const CandidateResumeUpload = () => {
                 exit={{ opacity: 0, height: 0 }}
                 className="space-y-4"
               >
-                {/* Job Recommendations */}
-                {jobRecommendations.length > 0 && (
+                {loadingResumeData ? (
                   <Card className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-gray-900 flex items-center">
-                        <Icon name="briefcase" size="lg" className="mr-2 text-blue-600" />
-                        Job Recommendations
-                      </h3>
-                      <span className="text-sm text-gray-500">
-                        {jobRecommendations.length} matches found
-                      </span>
-                    </div>
-                    <div className="space-y-3">
-                      {jobRecommendations.slice(0, 5).map((job, idx) => (
-                        <div key={idx} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-gray-900">{job.title}</h4>
-                              <p className="text-sm text-gray-600 mt-1">
-                                {job.department} • {job.location}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-1">{job.matchReason}</p>
-                            </div>
-                            <div className={`px-4 py-2 rounded-lg border ${getAtsScoreColor(job.atsScore)}`}>
-                              <div className="text-2xl font-bold">{job.atsScore}%</div>
-                              <div className="text-xs">Match</div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => window.location.href = '/candidate-portal/jobs'}
-                      >
-                        View All Jobs
-                        <Icon name="arrow-right" size="sm" className="ml-2" />
-                      </Button>
+                    <div className="flex items-center justify-center py-8">
+                      <LoadingSpinner />
+                      <span className="ml-3 text-gray-600">Loading resume analysis...</span>
                     </div>
                   </Card>
-                )}
+                ) : (
+                  <>
+                    {/* ATS Score Analysis */}
+                    {atsAnalysis && (
+                      <Card className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+                            <Icon name="chart-bar" size="lg" className="mr-2 text-blue-600" />
+                            ATS Score Analysis
+                          </h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <p className="text-sm text-gray-600 mb-1">Average Score</p>
+                            <p className="text-3xl font-bold text-blue-600">{atsAnalysis.averageScore || 0}%</p>
+                          </div>
+                          <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                            <p className="text-sm text-gray-600 mb-1">Best Match</p>
+                            <p className="text-3xl font-bold text-green-600">{atsAnalysis.maxScore || 0}%</p>
+                          </div>
+                          {atsAnalysis.topJobMatch && (
+                            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                              <p className="text-sm text-gray-600 mb-1">Top Job</p>
+                              <p className="text-sm font-semibold text-purple-900 truncate">{atsAnalysis.topJobMatch.jobTitle}</p>
+                              <p className="text-xs text-purple-700 mt-1">{atsAnalysis.topJobMatch.department}</p>
+                            </div>
+                          )}
+                        </div>
+                        {atsAnalysis.scores && atsAnalysis.scores.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-700 mb-2">Top Job Matches</h4>
+                            <div className="space-y-2">
+                              {atsAnalysis.scores.map((score, idx) => (
+                                <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div>
+                                      <p className="font-medium text-gray-900">{score.jobTitle}</p>
+                                      <p className="text-xs text-gray-600">{score.department}</p>
+                                    </div>
+                                    <div className={`px-3 py-1 rounded-lg ${getAtsScoreColor(score.score)}`}>
+                                      <span className="text-lg font-bold">{score.score}%</span>
+                                    </div>
+                                  </div>
+                                  {score.matchedSkills && score.matchedSkills.length > 0 && (
+                                    <div className="mt-2">
+                                      <p className="text-xs text-gray-600 mb-1">Matched Skills:</p>
+                                      <div className="flex flex-wrap gap-1">
+                                        {score.matchedSkills.slice(0, 5).map((skill, sIdx) => (
+                                          <span key={sIdx} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+                                            {skill}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {score.missingSkills && score.missingSkills.length > 0 && (
+                                    <div className="mt-2">
+                                      <p className="text-xs text-gray-600 mb-1">Missing Skills:</p>
+                                      <div className="flex flex-wrap gap-1">
+                                        {score.missingSkills.slice(0, 3).map((skill, sIdx) => (
+                                          <span key={sIdx} className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">
+                                            {skill}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </Card>
+                    )}
 
-                {/* Skills and Information */}
-                <Card className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                    <Icon name="sparkles" size="lg" className="mr-2 text-purple-600" />
-                    Extracted Information
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500 mb-2">Processing Status</p>
-                      <p className="text-sm text-gray-900">✅ Skills Extracted</p>
-                      <p className="text-sm text-gray-900">✅ ATS Scores Calculated</p>
-                      <p className="text-sm text-gray-900">✅ Job Recommendations Generated</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500 mb-2">Next Steps</p>
-                      <ul className="text-sm text-gray-900 space-y-1">
-                        <li>• Browse recommended jobs</li>
-                        <li>• Apply to positions with high ATS scores</li>
-                        <li>• Download professional template (HR can generate)</li>
-                      </ul>
-                    </div>
-                  </div>
-                </Card>
+                    {/* Improvement Suggestions */}
+                    {suggestions.length > 0 && (
+                      <Card className="p-6">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                          <Icon name="light-bulb" size="lg" className="mr-2 text-yellow-600" />
+                          Improvement Suggestions
+                        </h3>
+                        <div className="space-y-3">
+                          {suggestions.map((suggestion, idx) => (
+                            <div
+                              key={idx}
+                              className={`p-4 rounded-lg border ${
+                                suggestion.type === 'critical'
+                                  ? 'bg-red-50 border-red-200'
+                                  : suggestion.type === 'warning'
+                                  ? 'bg-yellow-50 border-yellow-200'
+                                  : 'bg-blue-50 border-blue-200'
+                              }`}
+                            >
+                              <div className="flex items-start">
+                                <Icon
+                                  name={
+                                    suggestion.type === 'critical'
+                                      ? 'exclamation-circle'
+                                      : suggestion.type === 'warning'
+                                      ? 'exclamation-triangle'
+                                      : 'information-circle'
+                                  }
+                                  size="md"
+                                  className={`mr-3 mt-0.5 ${
+                                    suggestion.type === 'critical'
+                                      ? 'text-red-600'
+                                      : suggestion.type === 'warning'
+                                      ? 'text-yellow-600'
+                                      : 'text-blue-600'
+                                  }`}
+                                />
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-gray-900 mb-1">{suggestion.title}</h4>
+                                  <p className="text-sm text-gray-700 mb-2">{suggestion.description}</p>
+                                  <p className="text-sm font-medium text-gray-900">💡 {suggestion.action}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </Card>
+                    )}
+
+                    {/* Extracted Skills */}
+                    {resumeData?.extractedData?.skills && resumeData.extractedData.skills.length > 0 && (
+                      <Card className="p-6">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                          <Icon name="sparkles" size="lg" className="mr-2 text-purple-600" />
+                          Extracted Skills
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {resumeData.extractedData.skills.map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full font-medium"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </Card>
+                    )}
+
+                    {/* Job Recommendations */}
+                    {jobRecommendations.length > 0 && (
+                      <Card className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+                            <Icon name="briefcase" size="lg" className="mr-2 text-blue-600" />
+                            Job Recommendations
+                          </h3>
+                          <span className="text-sm text-gray-500">
+                            {jobRecommendations.length} matches found
+                          </span>
+                        </div>
+                        <div className="space-y-3">
+                          {jobRecommendations.slice(0, 5).map((job, idx) => (
+                            <div key={idx} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-gray-900">{job.title}</h4>
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {job.department} • {job.location}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">{job.matchReason}</p>
+                                </div>
+                                <div className={`px-4 py-2 rounded-lg border ${getAtsScoreColor(job.atsScore)}`}>
+                                  <div className="text-2xl font-bold">{job.atsScore}%</div>
+                                  <div className="text-xs">Match</div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-4">
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => window.location.href = '/candidate-portal/jobs'}
+                          >
+                            View All Jobs
+                            <Icon name="arrow-right" size="sm" className="ml-2" />
+                          </Button>
+                        </div>
+                      </Card>
+                    )}
+                  </>
+                )}
               </motion.div>
             )}
           </motion.div>

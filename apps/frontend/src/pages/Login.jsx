@@ -146,7 +146,7 @@ const Login = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
               </svg>
                   </motion.div>
-                  <span className="ml-4 text-3xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">Mastersolis Infotech</span>
+                  <span className="ml-4 text-3xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">FWC</span>
                 </Link>
               </motion.div>
               
@@ -266,7 +266,7 @@ const Login = () => {
                   {/* Admin */}
                   <motion.div 
                     className="group relative overflow-hidden rounded-lg bg-slate-700/40 border border-slate-600/40 hover:border-red-500/50 transition-all duration-200 cursor-pointer"
-                    onClick={() => handleCredentialClick('admin@mastersolisinfotech.com', 'admin123')}
+                    onClick={() => handleCredentialClick('admin@fwcinfotech.com', 'admin123')}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                   >
@@ -283,7 +283,7 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-300 text-xs font-mono">admin@mastersolisinfotech.com</p>
+                          <p className="text-slate-300 text-xs font-mono">admin@fwcinfotech.com</p>
                           <p className="text-slate-400 text-xs font-mono">admin123</p>
                         </div>
                       </div>
@@ -293,7 +293,7 @@ const Login = () => {
                   {/* HR */}
                   <motion.div 
                     className="group relative overflow-hidden rounded-lg bg-slate-700/40 border border-slate-600/40 hover:border-green-500/50 transition-all duration-200 cursor-pointer"
-                    onClick={() => handleCredentialClick('hr@mastersolisinfotech.com', 'HR@2024!')}
+                    onClick={() => handleCredentialClick('hr@fwcinfotech.com', 'HR@2024!')}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                   >
@@ -310,7 +310,7 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-300 text-xs font-mono">hr@mastersolisinfotech.com</p>
+                          <p className="text-slate-300 text-xs font-mono">hr@fwcinfotech.com</p>
                           <p className="text-slate-400 text-xs font-mono">HR@2024!</p>
                         </div>
                       </div>
@@ -320,7 +320,7 @@ const Login = () => {
                   {/* Manager */}
                   <motion.div 
                     className="group relative overflow-hidden rounded-lg bg-slate-700/40 border border-slate-600/40 hover:border-purple-500/50 transition-all duration-200 cursor-pointer"
-                    onClick={() => handleCredentialClick('manager@mastersolisinfotech.com', 'manager123')}
+                    onClick={() => handleCredentialClick('manager@fwcinfotech.com', 'manager123')}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                   >
@@ -337,7 +337,7 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-300 text-xs font-mono">manager@mastersolisinfotech.com</p>
+                          <p className="text-slate-300 text-xs font-mono">manager@fwcinfotech.com</p>
                           <p className="text-slate-400 text-xs font-mono">manager123</p>
                         </div>
                       </div>
@@ -347,7 +347,7 @@ const Login = () => {
                   {/* Employee */}
                   <motion.div 
                     className="group relative overflow-hidden rounded-lg bg-slate-700/40 border border-slate-600/40 hover:border-yellow-500/50 transition-all duration-200 cursor-pointer"
-                    onClick={() => handleCredentialClick('employee@mastersolisinfotech.com', 'employee123')}
+                    onClick={() => handleCredentialClick('employee@fwcinfotech.com', 'employee123')}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                   >
@@ -364,7 +364,7 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-300 text-xs font-mono">employee@mastersolisinfotech.com</p>
+                          <p className="text-slate-300 text-xs font-mono">employee@fwcinfotech.com</p>
                           <p className="text-slate-400 text-xs font-mono">employee123</p>
                         </div>
                       </div>
@@ -374,7 +374,7 @@ const Login = () => {
                   {/* Candidate */}
                   <motion.div 
                     className="group relative overflow-hidden rounded-lg bg-slate-700/40 border border-slate-600/40 hover:border-cyan-500/50 transition-all duration-200 cursor-pointer"
-                    onClick={() => handleCredentialClick('candidate.demo@mastersolisinfotech.com', 'candidate123')}
+                    onClick={() => handleCredentialClick('candidate.demo@fwcinfotech.com', 'candidate123')}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                   >
@@ -391,7 +391,7 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-300 text-xs font-mono">candidate.demo@mastersolisinfotech.com</p>
+                          <p className="text-slate-300 text-xs font-mono">candidate.demo@fwcinfotech.com</p>
                           <p className="text-slate-400 text-xs font-mono">candidate123</p>
                         </div>
                       </div>

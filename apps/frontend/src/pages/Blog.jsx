@@ -65,11 +65,11 @@ const Blog = () => {
           {/* Hero Section */}
           <div className="text-center mb-16 animate-fade-in">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Mastersolis Infotech Blog
+              FWC Infotech Blog
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Stay informed with the latest trends in AI, automation, full-stack development, deep learning, and digital transformation. 
-              Discover how Mastersolis Infotech is shaping the future of technology.
+              Discover how FWC Infotech is shaping the future of technology.
             </p>
           </div>
 

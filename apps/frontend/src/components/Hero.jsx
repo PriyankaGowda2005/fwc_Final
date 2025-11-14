@@ -7,7 +7,7 @@ import DemoVideoModal from './DemoVideoModal'
 import { heroTitleVariants, heroSubtitleVariants, heroButtonsVariants, heroCardsVariants } from './motionVariants'
 
 /**
- * Hero Component - Mastersolis Infotech Design System
+ * Hero Component - FWC Infotech Design System
  * Professional hero section with interactive dashboard mockup and advanced animations
  */
 const Hero = () => {
@@ -129,7 +129,7 @@ const Hero = () => {
                 Crafting Intelligent Web Experiences — AI-Driven, Business-Ready.
               </p>
               <p className="text-base lg:text-lg text-gray-600 max-w-2xl leading-relaxed">
-                Mastersolis Infotech revolutionizes how businesses build their digital identity using AI-powered automation to launch, customize, and optimize entire business websites. Key Highlights: 10× faster creation, real-time analytics, integrated HR tools, and AI chatbots.
+                FWC Infotech revolutionizes how businesses build their digital identity using AI-powered automation to launch, customize, and optimize entire business websites. Key Highlights: 10× faster creation, real-time analytics, integrated HR tools, and AI chatbots.
               </p>
             </motion.div>
 

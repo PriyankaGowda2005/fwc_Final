@@ -18,7 +18,7 @@ const Privacy = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">Mastersolis Infotech</h1>
+                <h1 className="text-2xl font-bold text-gray-900">FWC Infotech</h1>
                 <p className="text-sm text-gray-500">Privacy Policy</p>
               </div>
             </div>
@@ -116,9 +116,11 @@ const Privacy = () => {
                 </p>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-gray-700">
-                    <strong>Email:</strong> privacy@mastersolisinfotech.com<br />
-                    <strong>Phone:</strong> +1 (555) 123-4567<br />
-                    <strong>Address:</strong> 123 Business Ave, Suite 100, New York, NY 10001
+                    <strong>Company:</strong> FWC IT SERVICES PRIVATE LIMITED<br />
+                    <strong>Email:</strong> support@fwc.co.in<br />
+                    <strong>Phone:</strong> +91 8026 597 566 (India) | +1 (408) 914-2832 (Global)<br />
+                    <strong>Address:</strong> 4th Floor, 1348, 7th Avenue, Opposite Yes Bank, Jayanagara 9th Block, Jayanagar, Bengaluru, Karnataka 560041, India<br />
+                    <strong>Website:</strong> <a href="https://fwc.co.in" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://fwc.co.in</a>
                   </p>
                 </div>
               </section>

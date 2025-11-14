@@ -10,14 +10,14 @@ async function testAllLogins() {
 
     // Test credentials - matching frontend demo credentials
     const testUsers = [
-      { email: 'admin@mastersolisinfotech.com', password: 'admin123', role: 'ADMIN', firstName: 'Admin', lastName: 'User' },
-      { email: 'hr@mastersolisinfotech.com', password: 'HR@2024!', role: 'HR', firstName: 'HR', lastName: 'Manager' },
-      { email: 'manager@mastersolisinfotech.com', password: 'manager123', role: 'MANAGER', firstName: 'Manager', lastName: 'User' },
-      { email: 'employee@mastersolisinfotech.com', password: 'employee123', role: 'EMPLOYEE', firstName: 'John', lastName: 'Doe' }
+      { email: 'admin@FWCinfotech.com', password: 'admin123', role: 'ADMIN', firstName: 'Admin', lastName: 'User' },
+      { email: 'hr@FWCinfotech.com', password: 'HR@2024!', role: 'HR', firstName: 'HR', lastName: 'Manager' },
+      { email: 'manager@FWCinfotech.com', password: 'manager123', role: 'MANAGER', firstName: 'Manager', lastName: 'User' },
+      { email: 'employee@FWCinfotech.com', password: 'employee123', role: 'EMPLOYEE', firstName: 'John', lastName: 'Doe' }
     ];
 
     const testCandidate = {
-      email: 'candidate.demo@mastersolisinfotech.com',
+      email: 'candidate.demo@FWCinfotech.com',
       password: 'candidate123',
       firstName: 'Demo',
       lastName: 'Candidate'
@@ -254,19 +254,19 @@ async function testAllLogins() {
     console.log('✅ All users and candidates are ready for login!\n');
     console.log('📋 Login Credentials:\n');
     console.log('ADMIN:');
-    console.log('   Email: admin@mastersolisinfotech.com');
+    console.log('   Email: admin@FWCinfotech.com');
     console.log('   Password: admin123\n');
     console.log('HR:');
-    console.log('   Email: hr@mastersolisinfotech.com');
+    console.log('   Email: hr@FWCinfotech.com');
     console.log('   Password: HR@2024!\n');
     console.log('MANAGER:');
-    console.log('   Email: manager@mastersolisinfotech.com');
+    console.log('   Email: manager@FWCinfotech.com');
     console.log('   Password: manager123\n');
     console.log('EMPLOYEE:');
-    console.log('   Email: employee@mastersolisinfotech.com');
+    console.log('   Email: employee@FWCinfotech.com');
     console.log('   Password: employee123\n');
     console.log('CANDIDATE:');
-    console.log('   Email: candidate.demo@mastersolisinfotech.com');
+    console.log('   Email: candidate.demo@FWCinfotech.com');
     console.log('   Password: candidate123\n');
 
     process.exit(0);

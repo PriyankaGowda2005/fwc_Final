@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 /**
- * Logo Component - Mastersolis Infotech Standard Logo
+ * Logo Component - FWC Infotech Standard Logo
  * Reusable logo component with consistent styling across the application
  */
 const Logo = ({ 
@@ -53,10 +53,10 @@ const Logo = ({
         whileHover={animated ? { scale: 1.05 } : {}}
         whileTap={animated ? { scale: 0.95 } : {}}
       >
-        {/* Mastersolis Infotech Logo Image */}
+        {/* FWC Infotech Logo Image */}
         <img 
           src="/logo.jpg" 
-          alt="Mastersolis Infotech Logo" 
+          alt="FWC Infotech Logo" 
           className="w-full h-full object-contain rounded-xl shadow-md"
           loading="lazy"
           onError={(e) => {
@@ -71,12 +71,12 @@ const Logo = ({
             }
           }}
         />
-        {/* Fallback Mastersolis Infotech logo */}
+        {/* Fallback FWC Infotech logo */}
         <div 
           className="w-full h-full bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex flex-col items-center justify-center shadow-md"
           style={{ display: 'none' }}
         >
-          <span className="text-white font-bold text-[9px] leading-tight">Mastersolis</span>
+          <span className="text-white font-bold text-[9px] leading-tight">FWC</span>
           <span className="text-blue-200 text-[7px] leading-tight">HRMS</span>
         </div>
       </motion.div>
@@ -90,7 +90,7 @@ const Logo = ({
               ? 'text-gray-900 group-hover:text-blue-600'
               : 'text-gray-900 group-hover:text-blue-600'
           } transition-all duration-300`}>
-            Mastersolis Infotech
+            FWC Infotech
           </span>
         </div>
       )}

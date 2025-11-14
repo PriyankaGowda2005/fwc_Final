@@ -10,14 +10,14 @@ async function testPasswordVerification() {
 
     // Test credentials
     const testUsers = [
-      { email: 'admin@mastersolisinfotech.com', password: 'admin123', role: 'ADMIN' },
-      { email: 'hr@mastersolisinfotech.com', password: 'HR@2024!', role: 'HR' },
-      { email: 'manager@mastersolisinfotech.com', password: 'manager123', role: 'MANAGER' },
-      { email: 'employee@mastersolisinfotech.com', password: 'employee123', role: 'EMPLOYEE' }
+      { email: 'admin@FWCinfotech.com', password: 'admin123', role: 'ADMIN' },
+      { email: 'hr@FWCinfotech.com', password: 'HR@2024!', role: 'HR' },
+      { email: 'manager@FWCinfotech.com', password: 'manager123', role: 'MANAGER' },
+      { email: 'employee@FWCinfotech.com', password: 'employee123', role: 'EMPLOYEE' }
     ];
 
     const testCandidate = {
-      email: 'candidate.demo@mastersolisinfotech.com',
+      email: 'candidate.demo@FWCinfotech.com',
       password: 'candidate123'
     };
 

@@ -57,7 +57,7 @@ function generateJobDescription(jobData) {
   const { title, department, location, type, summary, requirements = [], responsibilities = [] } = jobData;
   
   // Generate AI-driven job description (80-150 words)
-  const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+  const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
   const locationText = location ? ` in ${location}` : ' (Remote/Hybrid)';
   const typeText = type === 'FULL_TIME' ? 'full-time' : type === 'PART_TIME' ? 'part-time' : type?.toLowerCase() || 'full-time';
   
@@ -107,7 +107,7 @@ function generateJobDescription(jobData) {
   return description.trim();
 }
 
-// AI Email Generation Functions - Mastersolis Infotech
+// AI Email Generation Functions - FWC Infotech
 // Professional, warm, and informative tone for candidate communication
 function generateAcknowledgmentEmail(companyName, jobTitle, candidateName) {
   return {
@@ -358,7 +358,7 @@ router.post('/apply', upload.single('resume'), [
   const result = await database.insertOne('career_applications', application);
 
   // Get company name from environment or use default
-  const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+  const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
 
   // Generate AI acknowledgment email
   const emailData = generateAcknowledgmentEmail(companyName, job.title, name);
@@ -394,7 +394,7 @@ router.post('/apply', upload.single('resume'), [
             
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
             <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
-              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@mastersolis.com'}
+              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
             </p>
           </div>
         `
@@ -517,7 +517,7 @@ router.post('/send-interview-invitation', verifyToken, checkRole('ADMIN', 'HR'),
   }
 
   const { applicationId, interviewLink, interviewDate, interviewTime } = req.body;
-  const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+  const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
 
   // Get application details
   if (!ObjectId.isValid(applicationId)) {
@@ -581,7 +581,7 @@ router.post('/send-interview-invitation', verifyToken, checkRole('ADMIN', 'HR'),
             
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
             <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
-              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@mastersolis.com'}
+              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
             </p>
           </div>
         `
@@ -647,7 +647,7 @@ router.post('/send-decision-email', verifyToken, checkRole('ADMIN', 'HR'), [
   }
 
   const { applicationId, decision, nextSteps, feedback } = req.body;
-  const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+  const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
 
   // Get application details
   if (!ObjectId.isValid(applicationId)) {
@@ -711,7 +711,7 @@ router.post('/send-decision-email', verifyToken, checkRole('ADMIN', 'HR'), [
             
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
             <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
-              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@mastersolis.com'}
+              This is an automated email. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
             </p>
           </div>
         `
@@ -773,7 +773,7 @@ router.post('/send-interview-reminder', verifyToken, checkRole('ADMIN', 'HR'), [
   }
 
   const { interviewId } = req.body;
-  const companyName = process.env.COMPANY_NAME || 'Mastersolis Infotech';
+  const companyName = process.env.COMPANY_NAME || 'FWC Infotech';
 
   // Get interview details
   if (!ObjectId.isValid(interviewId)) {
@@ -838,7 +838,7 @@ router.post('/send-interview-reminder', verifyToken, checkRole('ADMIN', 'HR'), [
             
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
             <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">
-              This is an automated reminder. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@mastersolis.com'}
+              This is an automated reminder. For inquiries, contact: ${process.env.HR_EMAIL || 'hr@FWC.com'}
             </p>
           </div>
         `

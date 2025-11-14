@@ -9,7 +9,7 @@ async function testCandidateLogin() {
     await database.connect();
     console.log('✅ Connected\n');
 
-    const email = 'candidate.demo@mastersolisinfotech.com';
+    const email = 'candidate.demo@FWCinfotech.com';
     const password = 'candidate123';
 
     // Normalize email

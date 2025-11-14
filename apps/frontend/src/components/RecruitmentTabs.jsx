@@ -488,72 +488,281 @@ export const AIInterviewsTab = ({ candidates }) => {
 
 // Analytics Tab Component
 export const AnalyticsTab = ({ jobPostings, candidates, insights }) => {
+  // Calculate comprehensive stats
   const stats = {
     totalApplications: candidates.length,
     aiInterviews: candidates.filter(c => c.aiInterviewCompleted).length,
     hireRate: candidates.length > 0 ? 
       ((candidates.filter(c => c.status === 'HIRED').length / candidates.length) * 100).toFixed(1) : 0,
     averageFitScore: candidates.length > 0 ? 
-      (candidates.reduce((sum, c) => sum + (c.fitScore || 0), 0) / candidates.length).toFixed(1) : 0
+      (candidates.reduce((sum, c) => sum + (c.fitScore || 0), 0) / candidates.length).toFixed(1) : 0,
+    totalJobs: jobPostings.length,
+    activeJobs: jobPostings.filter(j => j.status === 'PUBLISHED').length,
+    closedJobs: jobPostings.filter(j => j.status === 'CLOSED').length,
+    draftJobs: jobPostings.filter(j => j.status === 'DRAFT').length,
+    newCandidates: candidates.filter(c => {
+      const createdDate = new Date(c.createdAt)
+      const weekAgo = new Date()
+      weekAgo.setDate(weekAgo.getDate() - 7)
+      return createdDate >= weekAgo
+    }).length,
+    shortlisted: candidates.filter(c => c.status === 'SHORTLISTED' || c.status === 'INTERVIEW_SCHEDULED').length,
+    interviewed: candidates.filter(c => c.status === 'INTERVIEWED').length,
+    offered: candidates.filter(c => c.status === 'OFFERED').length,
+    hired: candidates.filter(c => c.status === 'HIRED').length,
+    rejected: candidates.filter(c => c.status === 'REJECTED').length
   }
+
+  // Calculate department breakdown
+  const departmentBreakdown = jobPostings.reduce((acc, job) => {
+    const dept = job.department || 'Unknown'
+    if (!acc[dept]) {
+      acc[dept] = { jobs: 0, candidates: 0 }
+    }
+    acc[dept].jobs += 1
+    return acc
+  }, {})
+
+  // Calculate status distribution
+  const statusDistribution = candidates.reduce((acc, candidate) => {
+    const status = candidate.status || 'APPLIED'
+    acc[status] = (acc[status] || 0) + 1
+    return acc
+  }, {})
+
+  // Calculate monthly application trends (last 6 months)
+  const monthlyTrends = Array.from({ length: 6 }, (_, i) => {
+    const date = new Date()
+    date.setMonth(date.getMonth() - (5 - i))
+    const monthStart = new Date(date.getFullYear(), date.getMonth(), 1)
+    const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    
+    const count = candidates.filter(c => {
+      const createdDate = new Date(c.createdAt)
+      return createdDate >= monthStart && createdDate <= monthEnd
+    }).length
+
+    return {
+      month: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      count
+    }
+  })
+
+  const maxTrendCount = Math.max(...monthlyTrends.map(t => t.count), 1)
 
   return (
     <div className="space-y-8">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Total Applications</h3>
-          <p className="text-3xl font-bold text-blue-600">{stats.totalApplications}</p>
-          <p className="text-sm text-gray-500 mt-1">All time</p>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">AI Interviews</h3>
-          <p className="text-3xl font-bold text-purple-600">{stats.aiInterviews}</p>
-          <p className="text-sm text-gray-500 mt-1">Completed</p>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Hire Rate</h3>
-          <p className="text-3xl font-bold text-green-600">{stats.hireRate}%</p>
-          <p className="text-sm text-gray-500 mt-1">Success rate</p>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Avg Fit Score</h3>
-          <p className="text-3xl font-bold text-orange-600">{stats.averageFitScore}</p>
-          <p className="text-sm text-gray-500 mt-1">AI Analysis</p>
-        </div>
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Recruitment Analytics</h2>
+        <p className="text-gray-600 mt-1">Comprehensive insights into your recruitment process</p>
       </div>
 
-      {/* Charts and Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Application Trends</h3>
-          <div className="h-64 flex items-center justify-center text-gray-500">
-            <ChartBarIcon className="w-16 h-16" />
-            <p className="ml-4">Chart visualization coming soon</p>
+      {/* Key Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-100 text-sm font-medium">Total Applications</p>
+              <p className="text-3xl font-bold mt-2">{stats.totalApplications}</p>
+              <p className="text-blue-100 text-xs mt-1">All time</p>
+            </div>
+            <UserGroupIcon className="w-10 h-10 text-blue-200" />
           </div>
         </div>
 
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-100 text-sm font-medium">AI Interviews</p>
+              <p className="text-3xl font-bold mt-2">{stats.aiInterviews}</p>
+              <p className="text-purple-100 text-xs mt-1">Completed</p>
+            </div>
+            <VideoCameraIcon className="w-10 h-10 text-purple-200" />
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-green-100 text-sm font-medium">Hire Rate</p>
+              <p className="text-3xl font-bold mt-2">{stats.hireRate}%</p>
+              <p className="text-green-100 text-xs mt-1">Success rate</p>
+            </div>
+            <CheckCircleIcon className="w-10 h-10 text-green-200" />
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-orange-100 text-sm font-medium">Avg Fit Score</p>
+              <p className="text-3xl font-bold mt-2">{stats.averageFitScore}%</p>
+              <p className="text-orange-100 text-xs mt-1">AI Analysis</p>
+            </div>
+            <StarIcon className="w-10 h-10 text-orange-200" />
+          </div>
+        </div>
+      </div>
+
+      {/* Job Postings Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Top Departments</h3>
-          <div className="space-y-3">
-            {jobPostings.reduce((acc, job) => {
-              const dept = job.department || 'Unknown'
-              acc[dept] = (acc[dept] || 0) + 1
-              return acc
-            }, {})}
-            {Object.entries(jobPostings.reduce((acc, job) => {
-              const dept = job.department || 'Unknown'
-              acc[dept] = (acc[dept] || 0) + 1
-              return acc
-            }, {})).map(([dept, count]) => (
-              <div key={dept} className="flex justify-between items-center">
-                <span className="text-gray-700">{dept}</span>
-                <span className="text-sm font-medium text-blue-600">{count} jobs</span>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total Job Postings</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.totalJobs}</p>
+            </div>
+            <BriefcaseIcon className="w-8 h-8 text-blue-500" />
+          </div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Active Jobs</p>
+              <p className="text-2xl font-bold text-green-600 mt-1">{stats.activeJobs}</p>
+            </div>
+            <CheckCircleIcon className="w-8 h-8 text-green-500" />
+          </div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Closed Jobs</p>
+              <p className="text-2xl font-bold text-gray-600 mt-1">{stats.closedJobs}</p>
+            </div>
+            <XCircleIcon className="w-8 h-8 text-gray-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Application Trends */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">Application Trends (Last 6 Months)</h3>
+        <div className="space-y-4">
+          {monthlyTrends.map((trend, index) => (
+            <div key={index} className="flex items-center space-x-4">
+              <div className="w-24 text-sm text-gray-600">{trend.month}</div>
+              <div className="flex-1 bg-gray-100 rounded-full h-8 relative overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full flex items-center justify-end pr-2 transition-all duration-500"
+                  style={{ width: `${(trend.count / maxTrendCount) * 100}%` }}
+                >
+                  {trend.count > 0 && (
+                    <span className="text-xs font-medium text-white">{trend.count}</span>
+                  )}
+                </div>
               </div>
-            ))}
+              <div className="w-12 text-right text-sm font-medium text-gray-700">{trend.count}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Charts and Insights Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Candidate Status Distribution */}
+        <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Candidate Status Distribution</h3>
+          <div className="space-y-4">
+            {Object.entries(statusDistribution).map(([status, count]) => {
+              const percentage = stats.totalApplications > 0 ? ((count / stats.totalApplications) * 100).toFixed(1) : 0
+              return (
+                <div key={status}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-700">{status}</span>
+                    <span className="text-sm text-gray-600">{count} ({percentage}%)</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Top Departments */}
+        <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Departments by Job Postings</h3>
+          <div className="space-y-3">
+            {Object.entries(departmentBreakdown)
+              .sort((a, b) => b[1].jobs - a[1].jobs)
+              .slice(0, 5)
+              .map(([dept, data]) => (
+                <div key={dept} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <BuildingOfficeIcon className="w-5 h-5 text-gray-500" />
+                    <span className="font-medium text-gray-900">{dept}</span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-gray-600">{data.candidates} candidates</span>
+                    <span className="text-sm font-bold text-blue-600">{data.jobs} jobs</span>
+                  </div>
+                </div>
+              ))}
+            {Object.keys(departmentBreakdown).length === 0 && (
+              <p className="text-gray-500 text-center py-4">No department data available</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Recruitment Funnel */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">Recruitment Funnel</h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="text-center">
+            <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2">
+              <span className="text-2xl font-bold text-blue-600">{stats.totalApplications}</span>
+            </div>
+            <p className="text-sm font-medium text-gray-700">Applied</p>
+          </div>
+          <div className="text-center">
+            <div className="bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2">
+              <span className="text-2xl font-bold text-yellow-600">{stats.shortlisted}</span>
+            </div>
+            <p className="text-sm font-medium text-gray-700">Shortlisted</p>
+          </div>
+          <div className="text-center">
+            <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2">
+              <span className="text-2xl font-bold text-purple-600">{stats.interviewed}</span>
+            </div>
+            <p className="text-sm font-medium text-gray-700">Interviewed</p>
+          </div>
+          <div className="text-center">
+            <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2">
+              <span className="text-2xl font-bold text-orange-600">{stats.offered}</span>
+            </div>
+            <p className="text-sm font-medium text-gray-700">Offered</p>
+          </div>
+          <div className="text-center">
+            <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2">
+              <span className="text-2xl font-bold text-green-600">{stats.hired}</span>
+            </div>
+            <p className="text-sm font-medium text-gray-700">Hired</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity Summary */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-600 font-medium">New Candidates (Last 7 Days)</p>
+            <p className="text-2xl font-bold text-blue-900 mt-2">{stats.newCandidates}</p>
+          </div>
+          <div className="p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-green-600 font-medium">Hired This Month</p>
+            <p className="text-2xl font-bold text-green-900 mt-2">{stats.hired}</p>
+          </div>
+          <div className="p-4 bg-purple-50 rounded-lg">
+            <p className="text-sm text-purple-600 font-medium">AI Interviews Completed</p>
+            <p className="text-2xl font-bold text-purple-900 mt-2">{stats.aiInterviews}</p>
           </div>
         </div>
       </div>

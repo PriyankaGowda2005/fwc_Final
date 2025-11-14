@@ -43,7 +43,27 @@ router.get('/my-interviews', authenticateCandidate, async (req, res) => {
     const populatedInterviews = await Promise.all(
       interviews.map(async (interview) => {
         const jobPosting = await database.findOne('job_postings', { _id: interview.jobPostingId });
-        const attachment = await database.findOne('job_attachments', { _id: interview.attachmentId });
+        let attachment = null;
+        
+        // Try to get attachment if attachmentId exists
+        if (interview.attachmentId) {
+          attachment = await database.findOne('job_attachments', { _id: interview.attachmentId });
+        }
+        
+        // For AI interviews, try to get screening data from candidate's screening records
+        if (!attachment && interview.interviewType === 'AI' && interview.jobPostingId) {
+          const screening = await database.findOne('resume_screenings', {
+            candidateId: interview.candidateId,
+            jobPostingId: interview.jobPostingId
+          });
+          if (screening) {
+            attachment = {
+              fitScore: screening.fitScore,
+              strengths: screening.strengths,
+              weaknesses: screening.weaknesses
+            };
+          }
+        }
         
         return {
           ...interview,
@@ -55,7 +75,9 @@ router.get('/my-interviews', authenticateCandidate, async (req, res) => {
           } : null,
           attachment: attachment ? {
             fitScore: attachment.fitScore,
-            priority: attachment.priority
+            priority: attachment.priority,
+            strengths: attachment.strengths,
+            weaknesses: attachment.weaknesses
           } : null
         };
       })

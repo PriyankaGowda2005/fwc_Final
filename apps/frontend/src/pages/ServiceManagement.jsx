@@ -21,7 +21,7 @@ const ServiceManagement = () => {
 
   // Form states
   const [generateForm, setGenerateForm] = useState({
-    companyName: 'Mastersolis Infotech',
+    companyName: 'FWC Infotech',
     industry: 'AI-Powered Digital Solutions & IT Services',
     targetAudience: 'Businesses seeking AI-driven automation and digital transformation',
     toneOfVoice: 'professional, modern, innovative',
@@ -123,7 +123,7 @@ const ServiceManagement = () => {
 
   const resetGenerateForm = () => {
     setGenerateForm({
-      companyName: 'Mastersolis Infotech',
+      companyName: 'FWC Infotech',
       industry: 'AI-Powered Digital Solutions & IT Services',
       targetAudience: 'Businesses seeking AI-driven automation and digital transformation',
       toneOfVoice: 'professional, modern, innovative',

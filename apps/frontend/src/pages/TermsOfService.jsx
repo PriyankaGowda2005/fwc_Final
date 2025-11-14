@@ -18,7 +18,7 @@ const TermsOfService = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">Mastersolis Infotech</h1>
+                <h1 className="text-2xl font-bold text-gray-900">FWC Infotech</h1>
                 <p className="text-sm text-gray-500">Terms of Service</p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const TermsOfService = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
                 <p className="text-gray-600 mb-4">
-                  By accessing and using Mastersolis Infotech services, you accept and agree to be bound by the terms 
+                  By accessing and using FWC Infotech services, you accept and agree to be bound by the terms 
                   and provision of this agreement. If you do not agree to abide by the above, please do not 
                   use this service.
                 </p>
@@ -49,7 +49,7 @@ const TermsOfService = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Use License</h2>
                 <p className="text-gray-600 mb-4">
-                  Permission is granted to temporarily download one copy of Mastersolis Infotech per device for 
+                  Permission is granted to temporarily download one copy of FWC Infotech per device for 
                   personal, non-commercial transitory viewing only. This is the grant of a license, not a 
                   transfer of title, and under this license you may not:
                 </p>
@@ -64,7 +64,7 @@ const TermsOfService = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Service Availability</h2>
                 <p className="text-gray-600 mb-4">
-                  Mastersolis Infotech strives to maintain high service availability but does not guarantee uninterrupted 
+                  FWC Infotech strives to maintain high service availability but does not guarantee uninterrupted 
                   service. We reserve the right to modify, suspend, or discontinue any part of our service 
                   at any time with or without notice.
                 </p>
@@ -73,7 +73,7 @@ const TermsOfService = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. User Responsibilities</h2>
                 <p className="text-gray-600 mb-4">
-                  As a user of Mastersolis Infotech, you agree to:
+                  As a user of FWC Infotech, you agree to:
                 </p>
                 <ul className="list-disc list-inside text-gray-600 mb-4 space-y-2">
                   <li>Provide accurate and complete information</li>
@@ -96,9 +96,9 @@ const TermsOfService = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Limitation of Liability</h2>
                 <p className="text-gray-600 mb-4">
-                  In no event shall Mastersolis Infotech or its suppliers be liable for any damages (including, without 
+                  In no event shall FWC Infotech or its suppliers be liable for any damages (including, without 
                   limitation, damages for loss of data or profit, or due to business interruption) arising 
-                  out of the use or inability to use the materials on Mastersolis Infotech, even if Mastersolis Infotech or an 
+                  out of the use or inability to use the materials on FWC Infotech, even if FWC Infotech or an 
                   authorized representative has been notified orally or in writing of the possibility of 
                   such damage.
                 </p>
@@ -129,9 +129,11 @@ const TermsOfService = () => {
                 </p>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-gray-700">
-                    <strong>Email:</strong> legal@mastersolisinfotech.com<br />
-                    <strong>Phone:</strong> +1 (555) 123-4567<br />
-                    <strong>Address:</strong> 123 Business Ave, Suite 100, New York, NY 10001
+                    <strong>Company:</strong> FWC IT SERVICES PRIVATE LIMITED<br />
+                    <strong>Email:</strong> hr@fwc.co.in<br />
+                    <strong>Phone:</strong> +91 8026 597 566 (India) | +1 (408) 914-2832 (Global)<br />
+                    <strong>Address:</strong> 4th Floor, 1348, 7th Avenue, Opposite Yes Bank, Jayanagara 9th Block, Jayanagar, Bengaluru, Karnataka 560041, India<br />
+                    <strong>Website:</strong> <a href="https://fwc.co.in" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://fwc.co.in</a>
                   </p>
                 </div>
               </section>

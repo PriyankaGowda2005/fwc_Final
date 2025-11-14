@@ -26,26 +26,30 @@ async function sendEmailDirect(type, to, data) {
   if (!resend) {
     const errorMsg = 'Email service not configured. RESEND_API_KEY environment variable is required.';
     console.error(`❌ ${errorMsg}`);
-    console.error(`💡 To fix: Add RESEND_API_KEY to your .env file`);
+    console.error(`💡 To fix: Add RESEND_API_KEY to your .env file in apps/backend/.env`);
     return { success: false, error: errorMsg };
   }
 
   // Validate email address
-  if (!to || !to.includes('@')) {
+  if (!to || typeof to !== 'string' || !to.includes('@')) {
     const errorMsg = `Invalid email address: ${to}`;
     console.error(`❌ ${errorMsg}`);
     return { success: false, error: errorMsg };
   }
 
+  // Normalize email address
+  const normalizedEmail = to.toLowerCase().trim();
+  console.log(`📧 Normalized email address: ${normalizedEmail}`);
+
   try {
-    console.log(`📧 Preparing to send ${type} email to: ${to}`);
+    console.log(`📧 Preparing to send ${type} email to: ${normalizedEmail}`);
     const templates = {
       candidate_invitation: {
-        subject: 'Invitation to Join Mastersolis Infotech Talent Pool',
+        subject: 'Invitation to Join FWC Infotech Talent Pool',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+              <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
               <p style="color: #6b7280; margin: 5px 0;">Talent Acquisition Portal</p>
             </div>
             
@@ -53,7 +57,7 @@ async function sendEmailDirect(type, to, data) {
             
             <p>Dear ${data.candidateName || 'Candidate'},</p>
             
-            <p>We are excited to invite you to join our talent pool at Mastersolis Infotech. We believe your skills and experience could be a great fit for our organization.</p>
+            <p>We are excited to invite you to join our talent pool at FWC Infotech. We believe your skills and experience could be a great fit for our organization.</p>
             
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #1f2937;">What's Next?</h3>
@@ -85,18 +89,18 @@ async function sendEmailDirect(type, to, data) {
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
             <p style="color: #6b7280; font-size: 14px; text-align: center;">
               Best regards,<br>
-              ${data.invitedByName || 'Mastersolis Infotech HR Team'}<br>
-              <strong>Mastersolis Infotech Human Resources</strong>
+              ${data.invitedByName || 'FWC Infotech HR Team'}<br>
+              <strong>FWC Infotech Human Resources</strong>
             </p>
           </div>
         `
       },
       new_candidate_registered: {
-        subject: 'New Candidate Registered - Mastersolis Infotech',
+        subject: 'New Candidate Registered - FWC Infotech',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+              <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
               <p style="color: #6b7280; margin: 5px 0;">Talent Acquisition Portal</p>
             </div>
             
@@ -130,7 +134,7 @@ async function sendEmailDirect(type, to, data) {
             </div>
             
             <p>Best regards,<br>
-            <strong>Mastersolis Infotech System</strong></p>
+            <strong>FWC Infotech System</strong></p>
           </div>
         `
       },
@@ -139,7 +143,7 @@ async function sendEmailDirect(type, to, data) {
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Mastersolis Infotech</h1>
+              <h1 style="color: #2563eb; margin: 0;">FWC Infotech</h1>
               <p style="color: #6b7280; margin: 5px 0;">Talent Acquisition Portal</p>
             </div>
             
@@ -180,7 +184,7 @@ async function sendEmailDirect(type, to, data) {
             
             <p>Best regards,<br>
             <strong>${data.invitedByName}</strong><br>
-            <strong>Mastersolis Infotech Human Resources Team</strong></p>
+            <strong>FWC Infotech Human Resources Team</strong></p>
           </div>
         `
       }
@@ -191,20 +195,59 @@ async function sendEmailDirect(type, to, data) {
       throw new Error(`Email template not found for type: ${type}`);
     }
 
-    const fromEmail = process.env.RESEND_FROM || 'Mastersolis Infotech <onboarding@resend.dev>';
+    // Use verified domain email if available, otherwise use default
+    // For production, you should verify a domain at resend.com/domains
+    const fromEmail = process.env.RESEND_FROM || 'FWC Infotech <onboarding@resend.dev>';
     console.log(`📧 Sending email from: ${fromEmail}`);
-    console.log(`📧 Sending email to: ${to}`);
+    console.log(`📧 Sending email to: ${normalizedEmail}`);
     
     const result = await resend.emails.send({
       from: fromEmail,
-      to: [to],
+      to: [normalizedEmail], // Use normalized email
       subject: template.subject,
       html: template.html
     });
 
     if (result.error) {
       console.error('❌ Resend API error:', result.error);
-      return { success: false, error: result.error.message || 'Resend API returned an error' };
+      
+      // Check for specific Resend testing mode error
+      const errorMessage = result.error.message || '';
+      if (errorMessage.includes('only send testing emails') || errorMessage.includes('verify a domain')) {
+        // Extract verified email from error message if available
+        const verifiedEmailMatch = errorMessage.match(/\(([^)]+@[^)]+)\)/);
+        const verifiedEmail = verifiedEmailMatch ? verifiedEmailMatch[1] : null;
+        
+        let detailedError = `Resend is in testing mode. ${errorMessage}`;
+        let solution = `\n\n🔧 TO FIX THIS AND SEND TO ANY EMAIL:\n`;
+        solution += `1. Go to https://resend.com/domains\n`;
+        solution += `2. Click "Add Domain" and enter your domain (e.g., fwc.co.in)\n`;
+        solution += `3. Add the DNS records provided by Resend to your domain's DNS settings\n`;
+        solution += `4. Wait for domain verification (usually 5-30 minutes)\n`;
+        solution += `5. Update apps/backend/.env with:\n`;
+        solution += `   RESEND_FROM="FWC Infotech <noreply@fwc.co.in>"\n`;
+        solution += `6. Restart your backend server\n`;
+        
+        if (verifiedEmail) {
+          solution += `\n⚠️  TEMPORARY WORKAROUND: You can currently only send to: ${verifiedEmail}\n`;
+          solution += `   To send to other emails, domain verification is required.\n`;
+        }
+        
+        detailedError += solution;
+        console.error(`❌ ${detailedError}`);
+        return { 
+          success: false, 
+          error: detailedError,
+          requiresDomainVerification: true,
+          verifiedEmail: verifiedEmail
+        };
+      }
+      
+      return { 
+        success: false, 
+        error: result.error.message || 'Resend API returned an error',
+        errorDetails: result.error
+      };
     }
 
     console.log('✅ Email sent successfully. Message ID:', result.data?.id);
@@ -1168,10 +1211,39 @@ router.post('/invite', verifyToken, async (req, res) => {
     // Send email invitation directly to the provided email address
     let emailSent = false;
     let emailError = null;
+    let emailMessageId = null;
     
     try {
       console.log(`📧 Attempting to send invitation email to: ${invitation.email}`);
       console.log(`📧 Registration link: ${registrationLink}`);
+      
+      // Check if RESEND_API_KEY is configured
+      if (!process.env.RESEND_API_KEY) {
+        emailError = 'Email service not configured. RESEND_API_KEY environment variable is required.';
+        console.error(`❌ ${emailError}`);
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to send invitation email',
+          error: emailError,
+          data: {
+            invitationId: invitationResult.insertedId,
+            email: invitation.email,
+            candidateName: invitation.candidateName,
+            registrationLink,
+            emailSent: false
+          }
+        });
+      }
+      
+      // Check if using default Resend testing email (onboarding@resend.dev)
+      // This only works for verified test emails
+      const isUsingTestEmail = !process.env.RESEND_FROM || 
+                               process.env.RESEND_FROM.includes('onboarding@resend.dev');
+      
+      if (isUsingTestEmail) {
+        console.warn('⚠️  Using Resend test email. Domain verification required for production use.');
+        console.warn('💡 To send to any email: Verify domain at https://resend.com/domains and update RESEND_FROM');
+      }
       
       const emailResult = await sendEmailDirect('candidate_invitation', invitation.email, {
         candidateName: invitation.candidateName,
@@ -1179,13 +1251,27 @@ router.post('/invite', verifyToken, async (req, res) => {
         invitedByName: invitation.invitedByName
       });
       
-      if (emailResult.success) {
+      if (emailResult && emailResult.success) {
         emailSent = true;
+        emailMessageId = emailResult.messageId;
         console.log(`✅ Email invitation sent successfully to: ${invitation.email}`);
-        console.log(`📧 Message ID: ${emailResult.messageId || 'N/A'}`);
+        console.log(`📧 Message ID: ${emailMessageId || 'N/A'}`);
       } else {
-        emailError = emailResult.error || 'Unknown error';
+        emailError = emailResult?.error || 'Unknown error occurred while sending email';
         console.error(`❌ Failed to send email to ${invitation.email}:`, emailError);
+        
+        // If domain verification is required, provide helpful instructions
+        if (emailResult?.requiresDomainVerification) {
+          console.error(`\n💡 SOLUTION: To fix this issue and send emails to any recipient:`);
+          console.error(`   1. Go to https://resend.com/domains`);
+          console.error(`   2. Click "Add Domain" and verify your domain (e.g., fwc.co.in)`);
+          console.error(`   3. Add the DNS records provided by Resend to your domain's DNS settings`);
+          console.error(`   4. Wait for domain verification (usually takes a few minutes)`);
+          console.error(`   5. Update RESEND_FROM in apps/backend/.env to:`);
+          console.error(`      RESEND_FROM="FWC Infotech <noreply@fwc.co.in>"`);
+          console.error(`   6. Restart your backend server`);
+          console.error(`\n   📝 Note: Until domain is verified, you can only send to verified test emails.\n`);
+        }
       }
     } catch (error) {
       emailError = error.message || 'Unknown error occurred';
@@ -1193,13 +1279,16 @@ router.post('/invite', verifyToken, async (req, res) => {
       console.error('Error stack:', error.stack);
     }
 
-    // Return response - if email failed, still return success but with warning
+    // If email failed to send, return error response
     if (!emailSent) {
-      console.warn(`⚠️  Invitation created but email not sent. Registration link: ${registrationLink}`);
-      return res.status(200).json({
-        success: true,
-        message: `Invitation created but email failed to send. Please share this registration link manually: ${registrationLink}`,
-        warning: true,
+      console.error(`❌ Invitation created but email failed to send to: ${invitation.email}`);
+      console.error(`   Error: ${emailError}`);
+      console.error(`   Registration link: ${registrationLink}`);
+      
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send invitation email',
+        error: emailError || 'Email service error. Please check RESEND_API_KEY configuration.',
         data: {
           invitationId: invitationResult.insertedId,
           email: invitation.email,
@@ -1207,12 +1296,12 @@ router.post('/invite', verifyToken, async (req, res) => {
           expiresAt: invitation.expiresAt,
           emailSent: false,
           registrationLink,
-          emailError: emailError || 'Email service not configured. RESEND_API_KEY may be missing.',
-          manualLink: registrationLink
+          emailError: emailError
         }
       });
     }
 
+    // Success response
     res.json({
       success: true,
       message: 'Invitation sent successfully',
@@ -1222,6 +1311,7 @@ router.post('/invite', verifyToken, async (req, res) => {
         candidateName: invitation.candidateName,
         expiresAt: invitation.expiresAt,
         emailSent: true,
+        emailMessageId: emailMessageId,
         registrationLink,
         emailError: null
       }
@@ -1523,7 +1613,7 @@ router.post('/invite-to-apply', verifyToken, async (req, res) => {
         candidateName: `${candidate.firstName} ${candidate.lastName}`,
         jobTitle: jobPosting.title,
         department: jobPosting.department,
-        companyName: 'Mastersolis Infotech',
+        companyName: 'FWC Infotech',
         invitationMessage: invitation.invitationMessage,
         jobDescription: jobPosting.description,
         applicationLink: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/candidate-portal/jobs/${jobPostingId}`,
