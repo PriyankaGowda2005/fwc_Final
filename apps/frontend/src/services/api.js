@@ -560,12 +560,70 @@ export const reportsAPI = {
 
 // Report API (for ReportsAnalytics page)
 export const reportAPI = {
-  getReport: ({ type, dateRange, filters } = {}) => 
-    api.get(`/reports/${type}?dateRange=${dateRange}&${new URLSearchParams(filters || {}).toString()}`),
+  getReport: ({ type, dateRange, filters } = {}) => {
+    // Map frontend report types to backend endpoints
+    const endpointMap = {
+      'overview': 'analytics',
+      'attendance': 'attendance',
+      'payroll': 'payroll',
+      'leave': 'leave',
+      'performance': 'performance',
+      'recruitment': 'recruitment/insights',
+      'turnover': 'recruitment/candidate-trends'
+    };
+    
+    const endpoint = endpointMap[type] || type;
+    const params = new URLSearchParams();
+    if (dateRange) {
+      // Convert dateRange to query params based on endpoint
+      if (endpoint === 'analytics') {
+        params.set('period', dateRange);
+      } else if (endpoint === 'attendance' || endpoint === 'leave') {
+        // Parse dateRange and set startDate/endDate
+        const now = new Date();
+        let startDate, endDate;
+        if (dateRange === 'current-month') {
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+          endDate = now;
+        } else if (dateRange === 'last-month') {
+          startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        } else if (dateRange === 'current-year') {
+          startDate = new Date(now.getFullYear(), 0, 1);
+          endDate = now;
+        } else {
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          endDate = now;
+        }
+        params.set('startDate', startDate.toISOString().split('T')[0]);
+        params.set('endDate', endDate.toISOString().split('T')[0]);
+      } else if (endpoint === 'payroll') {
+        const now = new Date();
+        params.set('month', (now.getMonth() + 1).toString());
+        params.set('year', now.getFullYear().toString());
+      } else if (endpoint === 'performance') {
+        const now = new Date();
+        params.set('year', now.getFullYear().toString());
+      } else if (endpoint.includes('recruitment')) {
+        params.set('period', dateRange || '30d');
+      }
+    }
+    
+    // Add filters
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== 'all') {
+          params.set(key, value);
+        }
+      });
+    }
+    
+    return api.get(`/reports/${endpoint}?${params.toString()}`);
+  },
   exportReport: ({ type, format, dateRange } = {}) => 
     api.get(`/reports/${type}/export?format=${format}&dateRange=${dateRange}`, { responseType: 'blob' }),
   getAnalytics: ({ period } = {}) => 
-    api.get(`/reports/analytics?period=${period}`),
+    api.get(`/reports/analytics?period=${period || 'month'}`),
 }
 
 // Settings API

@@ -148,6 +148,7 @@ app.use('/api/realtime-interview', require('./routes/realtimeInterview'));
 app.use('/api/candidate-conversion', require('./routes/candidateConversion'));
 app.use('/api/performance-reviews', require('./routes/performanceReviews'));
 app.use('/api/reports', require('./routes/reports'));
+app.use('/api/settings', require('./routes/settings'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/services', require('./routes/services'));
