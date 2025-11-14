@@ -85,13 +85,14 @@ const ReportsAnalytics = () => {
     }
   )
 
-  // Fetch AI insights for reports
+  // Fetch AI insights for reports (optional - don't fail if this fails)
   const { data: aiInsights, isLoading: aiLoading } = useQuery(
     ['ai-report-insights', selectedReport, dateRange],
     () => aiAPI.getReportInsights({ reportType: selectedReport, dateRange }),
     { 
-      retry: 3,
-      refetchInterval: 600000 // Refetch every 10 minutes
+      retry: 1,
+      refetchInterval: 600000, // Refetch every 10 minutes
+      enabled: false // Disable by default to avoid errors if AI service is not available
     }
   )
 
@@ -158,9 +159,17 @@ const ReportsAnalytics = () => {
         <div className="text-center max-w-md mx-auto">
           <XCircleIcon className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Reports</h2>
-          <p className="text-gray-600 mb-4">Unable to load reports and analytics data. Please check your connection and try again.</p>
+          <p className="text-gray-600 mb-4">
+            {reportError?.response?.status === 404 
+              ? 'Report endpoint not found. Please contact support.'
+              : reportError?.response?.status === 403
+              ? 'You do not have permission to view reports.'
+              : 'Unable to load reports and analytics data. Please check your connection and try again.'}
+          </p>
           <button 
-            onClick={() => window.location.reload()} 
+            onClick={() => {
+              queryClient.invalidateQueries(['reports', selectedReport, dateRange, filters])
+            }} 
             className="btn-primary"
           >
             Retry
@@ -170,10 +179,62 @@ const ReportsAnalytics = () => {
     )
   }
 
-  // Data extraction with fallbacks
-  const reports = reportData?.reports || {}
-  const analytics = reportData?.analytics || {}
+  // Data extraction with fallbacks - handle different response structures
+  let reports = {}
+  let analytics = {}
   const insights = aiInsights?.insights || {}
+  
+  if (reportData) {
+    // Handle different response structures from different endpoints
+    if (reportData.analytics) {
+      // Analytics endpoint response
+      analytics = reportData.analytics
+      reports = {
+        overview: reportData
+      }
+    } else if (reportData.attendanceRecords) {
+      // Attendance endpoint response
+      reports = {
+        attendance: {
+          records: reportData.attendanceRecords,
+          stats: reportData.stats
+        }
+      }
+    } else if (reportData.payrollRecords) {
+      // Payroll endpoint response
+      reports = {
+        payroll: {
+          records: reportData.payrollRecords,
+          stats: reportData.stats
+        }
+      }
+    } else if (reportData.leaveRequests) {
+      // Leave endpoint response
+      reports = {
+        leave: {
+          records: reportData.leaveRequests,
+          stats: reportData.stats
+        }
+      }
+    } else if (reportData.performanceReviews) {
+      // Performance endpoint response
+      reports = {
+        performance: {
+          records: reportData.performanceReviews,
+          stats: reportData.stats
+        }
+      }
+    } else if (reportData.metrics) {
+      // Recruitment insights endpoint response
+      reports = {
+        recruitment: reportData
+      }
+    } else {
+      // Fallback - use data as-is
+      reports = reportData
+      analytics = reportData
+    }
+  }
 
   const reportTypes = [
     { 

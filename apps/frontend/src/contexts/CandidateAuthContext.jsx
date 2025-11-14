@@ -177,16 +177,36 @@ export const CandidateAuthProvider = ({ children }) => {
       setLoading(true)
       setError(null)
 
+      console.log('Uploading resume:', file.name, file.type, file.size)
+
+      if (!file) {
+        const errorMsg = 'No file provided'
+        setError(errorMsg)
+        toast.error(errorMsg)
+        return { success: false, error: errorMsg }
+      }
+
       const formData = new FormData()
       formData.append('resumes', file) // Use 'resumes' for the new API
+
+      console.log('Sending request to /resume-processing/upload')
 
       const response = await api.post('/resume-processing/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
+        },
+        timeout: 60000, // 60 second timeout for large files
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log('Upload progress:', percentCompleted + '%')
+          }
         }
       })
       
-      if (response.data.success) {
+      console.log('Upload response:', response.data)
+
+      if (response.data && response.data.success) {
         // Update candidate data to reflect resume upload
         setCandidate(prev => ({
           ...prev,
@@ -197,12 +217,26 @@ export const CandidateAuthProvider = ({ children }) => {
         toast.success('Resume uploaded and processing started!')
         return { success: true, data: response.data.data }
       } else {
-        setError(response.data.message)
-        toast.error(response.data.message)
-        return { success: false, error: response.data.message }
+        const errorMsg = response.data?.message || 'Upload failed'
+        setError(errorMsg)
+        toast.error(errorMsg)
+        return { success: false, error: errorMsg }
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Resume upload failed'
+      console.error('Upload error:', error)
+      console.error('Error response:', error.response?.data)
+      console.error('Error status:', error.response?.status)
+      
+      let errorMessage = 'Resume upload failed'
+      
+      if (error.response) {
+        errorMessage = error.response.data?.message || `Upload failed: ${error.response.status} ${error.response.statusText}`
+      } else if (error.request) {
+        errorMessage = 'No response from server. Please check your connection.'
+      } else {
+        errorMessage = error.message || 'Resume upload failed'
+      }
+      
       setError(errorMessage)
       toast.error(errorMessage)
       return { success: false, error: errorMessage }

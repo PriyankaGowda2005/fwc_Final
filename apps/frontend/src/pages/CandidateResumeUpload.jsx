@@ -10,8 +10,16 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import toast from 'react-hot-toast'
 
 const CandidateResumeUpload = () => {
-  const { candidate, uploadResume, loading, error } = useCandidateAuth()
+  const { candidate, uploadResume, loading, error, isAuthenticated } = useCandidateAuth()
   const [dragActive, setDragActive] = useState(false)
+  
+  // Check if candidate is authenticated
+  useEffect(() => {
+    if (!isAuthenticated && !candidate) {
+      console.warn('Candidate not authenticated')
+      toast.error('Please log in to upload your resume')
+    }
+  }, [isAuthenticated, candidate])
   const [uploadedFile, setUploadedFile] = useState(null)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadStatus, setUploadStatus] = useState('idle') // idle, uploading, processing, success, error
@@ -105,9 +113,19 @@ const CandidateResumeUpload = () => {
   }
 
   const handleFileInput = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0])
+      const file = e.target.files[0]
+      console.log('File selected:', file.name, file.type, file.size)
+      handleFile(file)
+    } else {
+      console.log('No file selected')
     }
+    
+    // Reset input value to allow selecting the same file again
+    e.target.value = ''
   }
 
   const validateFile = (file) => {
@@ -129,13 +147,25 @@ const CandidateResumeUpload = () => {
   }
 
   const handleFile = async (file) => {
-    const validation = validateFile(file)
-    if (validation) {
-      setValidationError(validation)
+    console.log('handleFile called with:', file?.name)
+    
+    if (!file) {
+      console.error('No file provided')
+      setValidationError('No file selected')
       setUploadStatus('error')
       return
     }
 
+    const validation = validateFile(file)
+    if (validation) {
+      console.error('Validation failed:', validation)
+      setValidationError(validation)
+      setUploadStatus('error')
+      toast.error(validation)
+      return
+    }
+
+    console.log('File validated, starting upload...')
     setUploadedFile(file)
     setUploadStatus('uploading')
     setUploadProgress(0)
@@ -154,7 +184,9 @@ const CandidateResumeUpload = () => {
     }, 200)
 
     try {
+      console.log('Calling uploadResume with file:', file.name)
       const result = await uploadResume(file)
+      console.log('Upload result:', result)
       
       clearInterval(progressInterval)
       setUploadProgress(90)
@@ -277,6 +309,10 @@ const CandidateResumeUpload = () => {
     setValidationError('')
     setShowDetails(false)
     setProcessingStatus('')
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   return (
@@ -574,7 +610,16 @@ const CandidateResumeUpload = () => {
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            onClick={() => !uploadStatus && fileInputRef.current?.click()}
+            onClick={(e) => {
+              // Only trigger file input if not in uploading/processing/success state
+              if (uploadStatus === 'idle' || !uploadStatus) {
+                e.preventDefault()
+                e.stopPropagation()
+                if (fileInputRef.current) {
+                  fileInputRef.current.click()
+                }
+              }
+            }}
           >
             <AnimatePresence mode="wait">
               {uploadStatus === 'uploading' || uploadStatus === 'processing' ? (
@@ -687,7 +732,23 @@ const CandidateResumeUpload = () => {
                     <p className="text-gray-600">
                       Drag and drop your resume here, or click to browse files
                     </p>
-                    <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
+                    <div className="mt-4">
+                      <Button
+                        variant="primary"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          if (fileInputRef.current) {
+                            fileInputRef.current.click()
+                          }
+                        }}
+                        disabled={uploadStatus === 'uploading' || uploadStatus === 'processing'}
+                      >
+                        <Icon name="cloud-arrow-up" size="sm" className="mr-2" />
+                        Choose File
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 mt-4">
                       <div className="flex items-center space-x-2">
                         <Icon name="document-text" size="sm" className="text-red-500" />
                         <span>PDF</span>
@@ -709,9 +770,10 @@ const CandidateResumeUpload = () => {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.doc,.docx"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={handleFileInput}
               className="hidden"
+              disabled={uploadStatus === 'uploading' || uploadStatus === 'processing'}
             />
           </div>
         </Card>
