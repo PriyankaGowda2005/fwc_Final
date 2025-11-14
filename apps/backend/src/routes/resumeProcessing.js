@@ -11,20 +11,22 @@ const { authenticateCandidate } = require('../middleware/authMiddleware');
 const fetch = require('node-fetch');
 const multer = require('multer');
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, '../../uploads/resumes');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Configure multer for resume uploads (multiple files)
 const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../uploads/resumes');
-    try {
-      await fs.promises.mkdir(uploadDir, { recursive: true });
-      cb(null, uploadDir);
-    } catch (error) {
-      cb(error);
-    }
+  destination: (req, file, cb) => {
+    // Directory already exists, just use it
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, `resume-${uniqueSuffix}${path.extname(file.originalname)}`);
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `resume-${uniqueSuffix}${ext}`);
   }
 });
 
@@ -45,7 +47,43 @@ const upload = multer({
 });
 
 // Upload resume(s) and trigger automatic processing
-router.post('/upload', authenticateCandidate, upload.array('resumes', 5), async (req, res) => {
+router.post('/upload', authenticateCandidate, (req, res, next) => {
+  // Handle multer errors
+  upload.array('resumes', 5)(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({
+            success: false,
+            message: 'File too large. Maximum size is 10MB.'
+          });
+        }
+        if (err.code === 'LIMIT_FILE_COUNT') {
+          return res.status(400).json({
+            success: false,
+            message: 'Too many files. Maximum is 5 files.'
+          });
+        }
+        if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+          return res.status(400).json({
+            success: false,
+            message: 'Unexpected file field. Please use "resumes" as the field name.'
+          });
+        }
+        return res.status(400).json({
+          success: false,
+          message: `File upload error: ${err.message}`
+        });
+      }
+      // Handle other multer errors (like fileFilter errors)
+      return res.status(400).json({
+        success: false,
+        message: err.message || 'File upload failed'
+      });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -204,10 +242,25 @@ router.post('/upload', authenticateCandidate, upload.array('resumes', 5), async 
 
   } catch (error) {
     console.error('Resume upload error:', error);
+    console.error('Error stack:', error.stack);
+    
+    // Clean up uploaded files if database operation failed
+    if (req.files && req.files.length > 0) {
+      req.files.forEach(file => {
+        try {
+          if (fs.existsSync(file.path)) {
+            fs.unlinkSync(file.path);
+          }
+        } catch (cleanupError) {
+          // Silently fail cleanup
+        }
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
-      error: error.message
+      message: 'Internal server error during resume upload',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred while uploading your resume. Please try again.'
     });
   }
 });

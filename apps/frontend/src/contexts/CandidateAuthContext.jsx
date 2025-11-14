@@ -189,12 +189,14 @@ export const CandidateAuthProvider = ({ children }) => {
       const formData = new FormData()
       formData.append('resumes', file) // Use 'resumes' for the new API
 
-      console.log('Sending request to /resume-processing/upload')
+      console.log('Sending request to /resume-processing/upload', {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
+      })
 
+      // Don't set Content-Type manually - axios will set it with the boundary for FormData
       const response = await api.post('/resume-processing/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
         timeout: 60000, // 60 second timeout for large files
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {

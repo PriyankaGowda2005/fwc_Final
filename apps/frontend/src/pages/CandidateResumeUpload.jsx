@@ -16,7 +16,6 @@ const CandidateResumeUpload = () => {
   // Check if candidate is authenticated
   useEffect(() => {
     if (!isAuthenticated && !candidate) {
-      console.warn('Candidate not authenticated')
       toast.error('Please log in to upload your resume')
     }
   }, [isAuthenticated, candidate])
@@ -56,8 +55,6 @@ const CandidateResumeUpload = () => {
         setSuggestions([])
       }
     } catch (error) {
-      console.error('Error fetching resume data:', error)
-      // Only show error if it's not a 404 (resume not found)
       if (error.response?.status !== 404) {
         toast.error('Failed to load resume analysis. Please try again.')
       }
@@ -79,8 +76,6 @@ const CandidateResumeUpload = () => {
         setJobRecommendations([])
       }
     } catch (error) {
-      console.error('Error fetching job recommendations:', error)
-      // Don't show error toast for recommendations, just set empty array
       setJobRecommendations([])
     }
   }
@@ -117,11 +112,7 @@ const CandidateResumeUpload = () => {
     e.stopPropagation()
     
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      console.log('File selected:', file.name, file.type, file.size)
-      handleFile(file)
-    } else {
-      console.log('No file selected')
+      handleFile(e.target.files[0])
     }
     
     // Reset input value to allow selecting the same file again
@@ -147,10 +138,7 @@ const CandidateResumeUpload = () => {
   }
 
   const handleFile = async (file) => {
-    console.log('handleFile called with:', file?.name)
-    
     if (!file) {
-      console.error('No file provided')
       setValidationError('No file selected')
       setUploadStatus('error')
       return
@@ -158,14 +146,12 @@ const CandidateResumeUpload = () => {
 
     const validation = validateFile(file)
     if (validation) {
-      console.error('Validation failed:', validation)
       setValidationError(validation)
       setUploadStatus('error')
       toast.error(validation)
       return
     }
 
-    console.log('File validated, starting upload...')
     setUploadedFile(file)
     setUploadStatus('uploading')
     setUploadProgress(0)
@@ -184,9 +170,7 @@ const CandidateResumeUpload = () => {
     }, 200)
 
     try {
-      console.log('Calling uploadResume with file:', file.name)
       const result = await uploadResume(file)
-      console.log('Upload result:', result)
       
       clearInterval(progressInterval)
       setUploadProgress(90)
@@ -197,13 +181,9 @@ const CandidateResumeUpload = () => {
         // Update candidate context to reflect resume upload
         // The uploadResume function in context should already update this, but refresh profile to be sure
         try {
-          const profileResponse = await api.get('/candidates/profile')
-          if (profileResponse.data.success) {
-            // Update local candidate state if needed
-            // The context should handle this, but we ensure UI updates
-          }
+          await api.get('/candidates/profile')
         } catch (error) {
-          console.error('Error refreshing profile:', error)
+          // Silently fail - context should handle updates
         }
 
         // Wait a bit for processing, then check status
@@ -230,8 +210,6 @@ const CandidateResumeUpload = () => {
                 }
               } catch (error) {
                 if (i === retries - 1) {
-                  // Last retry failed, try fetching anyway
-                  console.error('Failed to fetch resume data after retries:', error)
                   await fetchResumeData()
                   await fetchJobRecommendations()
                 }
@@ -594,16 +572,17 @@ const CandidateResumeUpload = () => {
       >
         <Card className="p-8">
           {/* Upload Zone */}
-          <div
-            className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer group ${
-              dragActive
-                ? 'border-blue-400 bg-blue-50 scale-105'
+          <label
+            htmlFor="resume-file-input"
+            className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer group block ${
+              uploadStatus === 'uploading' || uploadStatus === 'processing'
+                ? 'cursor-wait'
                 : uploadStatus === 'success'
                 ? 'border-green-400 bg-green-50'
-                : uploadStatus === 'processing'
-                ? 'border-purple-400 bg-purple-50'
                 : uploadStatus === 'error'
                 ? 'border-red-400 bg-red-50'
+                : dragActive
+                ? 'border-blue-400 bg-blue-50 scale-105'
                 : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
             }`}
             onDragEnter={handleDrag}
@@ -611,13 +590,9 @@ const CandidateResumeUpload = () => {
             onDragOver={handleDrag}
             onDrop={handleDrop}
             onClick={(e) => {
-              // Only trigger file input if not in uploading/processing/success state
-              if (uploadStatus === 'idle' || !uploadStatus) {
+              if (uploadStatus === 'uploading' || uploadStatus === 'processing') {
                 e.preventDefault()
                 e.stopPropagation()
-                if (fileInputRef.current) {
-                  fileInputRef.current.click()
-                }
               }
             }}
           >
@@ -733,20 +708,25 @@ const CandidateResumeUpload = () => {
                       Drag and drop your resume here, or click to browse files
                     </p>
                     <div className="mt-4">
-                      <Button
-                        variant="primary"
+                      <label 
+                        htmlFor="resume-file-input" 
+                        className="cursor-pointer inline-block"
                         onClick={(e) => {
-                          e.preventDefault()
+                          // Prevent the label click from bubbling up to the drag area
                           e.stopPropagation()
-                          if (fileInputRef.current) {
-                            fileInputRef.current.click()
-                          }
                         }}
-                        disabled={uploadStatus === 'uploading' || uploadStatus === 'processing'}
                       >
-                        <Icon name="cloud-arrow-up" size="sm" className="mr-2" />
-                        Choose File
-                      </Button>
+                        <span 
+                          className={`inline-flex items-center justify-center px-4 py-2.5 text-base rounded-lg min-h-[44px] font-semibold transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                            uploadStatus === 'uploading' || uploadStatus === 'processing' 
+                              ? 'opacity-50 cursor-not-allowed' 
+                              : 'cursor-pointer'
+                          }`}
+                        >
+                          <Icon name="cloud-arrow-up" size="sm" className="mr-2" />
+                          Choose File
+                        </span>
+                      </label>
                     </div>
                     <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 mt-4">
                       <div className="flex items-center space-x-2">
@@ -768,14 +748,26 @@ const CandidateResumeUpload = () => {
             </AnimatePresence>
 
             <input
+              id="resume-file-input"
               ref={fileInputRef}
               type="file"
               accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={handleFileInput}
-              className="hidden"
               disabled={uploadStatus === 'uploading' || uploadStatus === 'processing'}
+              style={{ 
+                position: 'absolute',
+                width: '1px',
+                height: '1px',
+                padding: 0,
+                margin: '-1px',
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
+                pointerEvents: uploadStatus === 'uploading' || uploadStatus === 'processing' ? 'none' : 'auto'
+              }}
             />
-          </div>
+          </label>
         </Card>
       </motion.div>
 

@@ -6,8 +6,10 @@ const api = axios.create({
   withCredentials: true, // Important for cookies
   timeout: 30000, // 30 second timeout for better reliability
   headers: {
-    'Content-Type': 'application/json',
     'Accept': 'application/json'
+    // Don't set Content-Type here - let axios set it automatically
+    // For JSON: 'application/json'
+    // For FormData: 'multipart/form-data' with boundary (axios handles this)
   }
 })
 
@@ -23,6 +25,11 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     
+    // Set Content-Type only if not FormData (axios handles FormData automatically)
+    if (!(config.data instanceof FormData) && !config.headers['Content-Type']) {
+      config.headers['Content-Type'] = 'application/json'
+    }
+    
     // Add cache-busting headers for job postings
     if (config.url?.includes('job-postings')) {
       config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
@@ -33,7 +40,8 @@ api.interceptors.request.use(
     console.log('🔍 API Request:', config.method?.toUpperCase(), config.url, {
       hasToken: !!token,
       tokenType: token ? (localStorage.getItem('token') ? 'regular' : 'candidate') : 'none',
-      data: config.data
+      isFormData: config.data instanceof FormData,
+      contentType: config.headers['Content-Type']
     })
     return config
   },

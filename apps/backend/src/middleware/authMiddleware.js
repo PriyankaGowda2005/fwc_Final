@@ -57,7 +57,7 @@ const authenticateCandidate = async (req, res, next) => {
     // Check for token in Authorization header first, then cookies
     let token = req.headers.authorization?.split(' ')[1];
     if (!token) {
-      token = req.cookies.token;
+      token = req.cookies.token || req.cookies.candidateToken;
     }
 
     if (!token) {
